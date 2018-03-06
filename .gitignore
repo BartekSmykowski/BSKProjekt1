@@ -75,3 +75,11 @@ fabric.properties
 hs_err_pid*
 
 .idea/artifacts/
+/target/
+/bin/
+
+.settings/
+.project
+.classpath
+
+*.iml
