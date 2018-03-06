@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.DecodeSceneController">
+
+
+    <children>
+        <VBox layoutX="29.0" layoutY="14.0" prefHeight="200.0" prefWidth="166.0">
+            <children>
+                <Button mnemonicParsing="false" text="Wybierz plik" />
+                <Label text="Podaj nazwę nowego pliku:" />
+                <TextField />
+                <Button mnemonicParsing="false" text="Deszyfruj" />
+            </children>
+        </VBox>
+        <VBox layoutX="399.0" layoutY="14.0" prefHeight="200.0" prefWidth="145.0">
+            <children>
+                <Label text="Postęp deszyfrowania:" />
+                <ProgressBar prefWidth="200.0" progress="0.0" />
+            </children>
+        </VBox>
+        <VBox layoutX="14.0" layoutY="310.0" prefHeight="59.0" prefWidth="310.0">
+            <children>
+                <Label text="Informacje o wybranym pliku:" />
+                <HBox prefWidth="310.0">
+                    <children>
+                        <Label text="Nazwa pliku: " />
+                        <Label text="Nie wybrano" />
+                    </children>
+                </HBox>
+                <HBox prefWidth="310.0">
+                    <children>
+                        <Label text="Rozmiar pliku [Mb]: " />
+                        <Label text="Nie wybrano" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0">
+                   <children>
+                      <Label text="Rozszerzenie:" />
+                      <Label text="Nie wybrano" />
+                   </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Button layoutX="454.0" layoutY="344.0" mnemonicParsing="false" text="Menu główne" />
+    </children>
+</AnchorPane>
