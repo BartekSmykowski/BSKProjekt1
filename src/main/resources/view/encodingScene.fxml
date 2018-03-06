@@ -13,10 +13,11 @@
     <children>
         <VBox layoutX="29.0" layoutY="14.0" prefHeight="200.0" prefWidth="166.0">
             <children>
-                <Button mnemonicParsing="false" text="Wybierz plik" />
+                <Button mnemonicParsing="false" onMouseClicked="#chooseFile" text="Wybierz plik" />
                 <Label text="Podaj nazwę nowego pliku:" />
                 <TextField />
-                <Button mnemonicParsing="false" text="Szyfruj" />
+            <Button mnemonicParsing="false" onAction="#chooseDirectory" onMouseClicked="#chooseSaveDirectory" text="Wybierz folder do zapisu" />
+                <Button mnemonicParsing="false" onMouseClicked="#encode" text="Szyfruj" />
             </children>
         </VBox>
         <VBox layoutX="399.0" layoutY="14.0" prefHeight="200.0" prefWidth="156.0">
@@ -25,9 +26,9 @@
                 <ProgressBar prefWidth="200.0" progress="0.0" />
             </children>
         </VBox>
-        <VBox layoutX="14.0" layoutY="301.0" prefHeight="59.0" prefWidth="310.0">
+        <VBox layoutX="14.0" layoutY="287.0" prefHeight="59.0" prefWidth="310.0">
             <children>
-                <Label text="Informacje o wybranym pliku:" />
+                <Label text="Ogólne informacje:" />
                 <HBox prefHeight="16.0" prefWidth="310.0">
                     <children>
                         <Label text="Nazwa pliku: " />
@@ -52,10 +53,16 @@
                   <Label text="Nie wybrano" />
                </children>
             </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Folder zapisu: " />
+                  <Label text="Nie wybrano" />
+               </children>
+            </HBox>
             </children>
         </VBox>
       <Button layoutX="454.0" layoutY="344.0" mnemonicParsing="false" text="Menu główne" />
-      <VBox layoutX="242.0" layoutY="14.0" prefHeight="200.0" prefWidth="145.0">
+      <VBox layoutX="228.0" layoutY="14.0" prefHeight="200.0" prefWidth="145.0">
          <children>
             <Label text="Wybierz tryb szyfrowania:" />
             <ChoiceBox prefWidth="150.0" />

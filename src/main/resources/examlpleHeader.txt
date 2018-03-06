@@ -1,0 +1,13 @@
+{
+	"algorithm" : "nazwa",
+	"keySize" : "rozmiar",
+	"blockSize" : "rozmiar",
+	"cipherMode" : "tryb",
+	"users" : [
+		"user" : {
+			"login" : "login",
+			"pass" : "pass"
+		}
+		...
+	]
+}
