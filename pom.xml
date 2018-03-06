@@ -28,14 +28,14 @@
 				</configuration>
 			</plugin>
 		</plugins>
-
-		<dependencies>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-crypto</artifactId>
-				<version>1.0.0</version>
-			</dependency>
-		</dependencies>
 	</build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-crypto</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 
 </project>

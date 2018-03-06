@@ -16,7 +16,7 @@
                 <Button mnemonicParsing="false" onMouseClicked="#chooseFile" text="Wybierz plik" />
                 <Label text="Podaj nazwę nowego pliku:" />
                 <TextField />
-            <Button mnemonicParsing="false" onAction="#chooseDirectory" onMouseClicked="#chooseSaveDirectory" text="Wybierz folder do zapisu" />
+                <Button mnemonicParsing="false" onMouseClicked="#chooseSaveDirectory" text="Wybierz folder do zapisu" />
                 <Button mnemonicParsing="false" onMouseClicked="#encode" text="Szyfruj" />
             </children>
         </VBox>
@@ -61,7 +61,7 @@
             </HBox>
             </children>
         </VBox>
-      <Button layoutX="454.0" layoutY="344.0" mnemonicParsing="false" text="Menu główne" />
+      <Button layoutX="454.0" layoutY="344.0" mnemonicParsing="false" onMouseClicked="#mainMenu" text="Menu główne" />
       <VBox layoutX="228.0" layoutY="14.0" prefHeight="200.0" prefWidth="145.0">
          <children>
             <Label text="Wybierz tryb szyfrowania:" />

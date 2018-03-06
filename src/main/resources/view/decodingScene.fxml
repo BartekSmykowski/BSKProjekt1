@@ -49,6 +49,6 @@
                 </HBox>
             </children>
         </VBox>
-        <Button layoutX="454.0" layoutY="344.0" mnemonicParsing="false" text="Menu główne" />
+        <Button layoutX="454.0" layoutY="344.0" mnemonicParsing="false" onMouseClicked="#mainMenu" text="Menu główne" />
     </children>
 </AnchorPane>

@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.RegisterSceneController">
    <children>
       <VBox alignment="CENTER" layoutX="171.0" layoutY="100.0" prefHeight="200.0" prefWidth="199.0">
@@ -26,7 +25,7 @@
                </children>
             </HBox>
             <Button mnemonicParsing="false" text="Rejestruj" />
-            <Button mnemonicParsing="false" text="Menu główne" />
+            <Button mnemonicParsing="false" onMouseClicked="#mainMenu" text="Menu główne" />
          </children>
       </VBox>
    </children>
