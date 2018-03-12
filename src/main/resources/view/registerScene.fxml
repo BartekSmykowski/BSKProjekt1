@@ -14,17 +14,17 @@
          <children>
             <HBox prefWidth="200.0">
                <children>
-                  <Label text="Label" />
-                  <TextField />
+                  <Label text="Login" />
+                  <TextField fx:id="loginTextField" />
                </children>
             </HBox>
             <HBox prefWidth="200.0">
                <children>
-                  <Label text="Label" />
-                  <PasswordField />
+                  <Label text="Hasło" />
+                  <PasswordField fx:id="passwordField" />
                </children>
             </HBox>
-            <Button mnemonicParsing="false" text="Rejestruj" />
+            <Button mnemonicParsing="false" onMouseClicked="#register" text="Rejestruj" />
             <Button mnemonicParsing="false" onMouseClicked="#mainMenu" text="Menu główne" />
          </children>
       </VBox>
