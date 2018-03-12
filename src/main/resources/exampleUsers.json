@@ -1,0 +1,12 @@
+{
+	"users": [
+		{
+			"login": "exampleLogin",
+			"encodedPrivateRsaKey": "someHash"
+		}
+		{
+			"login": "exampleLogin2",
+			"encodedPrivateRsaKey": "someHash2"
+		}
+	]
+}
