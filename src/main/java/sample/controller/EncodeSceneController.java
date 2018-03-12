@@ -23,14 +23,25 @@ public class EncodeSceneController {
     }
 
     public void chooseFile(MouseEvent mouseEvent) {
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Wybierz plik do szyfrowania.");
         selectedFile = fileChooser.showOpenDialog(ScenesManager.getStage());
         if (selectedFile != null) {
-            chosenFileLabel.setText(selectedFile.getAbsolutePath());
+            chosenFileLabel.setText(selectedFile.getName());
+            double fileSizeMb = (double)selectedFile.length() / 1000000;
+            fileSizeLabel.setText(String.format("%.2f", fileSizeMb));
+            extensionLabel.setText(getFileExtension(selectedFile));
         }
 
+    }
+
+    private String getFileExtension(File file) {
+        String name = file.getName();
+        try {
+            return name.substring(name.lastIndexOf(".") + 1);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public void chooseSaveDirectory(MouseEvent mouseEvent) {
