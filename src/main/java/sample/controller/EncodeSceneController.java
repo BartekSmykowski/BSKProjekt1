@@ -20,7 +20,7 @@ public class EncodeSceneController {
     public Label extensionLabel;
     public Label encodingModeLabel;
     public ChoiceBox<EncodingModes> encodingModeChoiceBox;
-    public ListView encodingUsersListView;
+    public ListView<String> encodingUsersListView;
     public Label saveDirectoryLabel;
 
     private File selectedFile;

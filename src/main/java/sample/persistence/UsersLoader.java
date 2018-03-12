@@ -28,7 +28,7 @@ public class UsersLoader {
 	}
 
 	private Map<String, String> loadUsers(String path) {
-		URL users = getClass().getResource("/" + Settings.USERS_WITH_PRIVATE_KEY_PATH);
+		URL users = getClass().getResource("/" + path);
 		try {
 			return objectMapper.readValue(users, new TypeReference<Map<String, String>>() {
 			});
