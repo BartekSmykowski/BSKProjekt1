@@ -18,6 +18,10 @@ public class EncodeSceneController {
 
     private File selectedFile;
 
+    public void initialize(){
+
+    }
+
     public void mainMenu(MouseEvent mouseEvent) {
         ScenesManager.setScene(ScenesNames.MENU);
     }
