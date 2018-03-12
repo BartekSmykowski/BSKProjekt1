@@ -19,7 +19,7 @@
                 <Button mnemonicParsing="false" onMouseClicked="#chooseSaveDirectory" text="Wybierz folder do zapisu" />
             </children>
         </VBox>
-        <VBox layoutX="14.0" layoutY="287.0" prefHeight="59.0" prefWidth="310.0">
+        <VBox layoutX="204.0" layoutY="275.0" prefHeight="102.0" prefWidth="220.0">
             <children>
                 <Label text="Ogólne informacje:" />
                 <HBox prefHeight="16.0" prefWidth="310.0">
@@ -61,10 +61,10 @@
             <ChoiceBox prefWidth="150.0" />
          </children>
       </VBox>
-      <VBox layoutX="204.0" layoutY="14.0" prefHeight="286.0" prefWidth="220.0">
+      <VBox layoutX="38.0" layoutY="156.0" prefHeight="217.0" prefWidth="148.0">
          <children>
-            <Label text="Wybierz użytkowników dla pliku:" />
-            <ListView fx:id="encodingUsersListView" prefHeight="253.0" prefWidth="168.0" />
+            <Label text="Użytkownicy" />
+            <ListView fx:id="encodingUsersListView" prefHeight="215.0" prefWidth="109.0" />
          </children>
       </VBox>
           <Button layoutX="473.0" layoutY="313.0" mnemonicParsing="false" onMouseClicked="#encode" text="Szyfruj" />

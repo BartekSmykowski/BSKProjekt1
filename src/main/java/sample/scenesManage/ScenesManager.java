@@ -46,4 +46,8 @@ public class ScenesManager {
     public static void setStage(Stage setStage) {
         stage = setStage;
     }
+
+    public static Stage getStage() {
+        return stage;
+    }
 }
