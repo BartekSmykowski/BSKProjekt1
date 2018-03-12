@@ -49,7 +49,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label text="Folder zapisu: " />
-                  <Label fx:id="saveFileDirectory" text="Nie wybrano" />
+                  <Label fx:id="saveDirectoryLabel" text="Nie wybrano" />
                </children>
             </HBox>
             </children>

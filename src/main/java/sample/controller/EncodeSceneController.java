@@ -21,6 +21,7 @@ public class EncodeSceneController {
     public Label encodingModeLabel;
     public ChoiceBox<EncodingModes> encodingModeChoiceBox;
     public ListView encodingUsersListView;
+    public Label saveDirectoryLabel;
 
     private File selectedFile;
     private File saveDirectory;
@@ -67,6 +68,9 @@ public class EncodeSceneController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Wybierz folder zapisu.");
         saveDirectory = directoryChooser.showDialog(ScenesManager.getStage());
+        if (saveDirectory != null) {
+            saveDirectoryLabel.setText(saveDirectory.getAbsolutePath());
+        }
     }
 
     public void encode(MouseEvent mouseEvent) {
