@@ -7,15 +7,14 @@ import sample.scenesManage.ScenesManager;
 import sample.scenesManage.ScenesNames;
 
 public class RegisterSceneController {
-
     public TextField loginTextField;
     public PasswordField passwordField;
 
-    public void mainMenu(MouseEvent mouseEvent) {
+    public void mainMenu() {
         ScenesManager.setScene(ScenesNames.MENU);
     }
 
-    public void register(MouseEvent mouseEvent) {
-
+    public void register() {
+    	
     }
 }
