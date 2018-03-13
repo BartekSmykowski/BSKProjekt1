@@ -94,8 +94,9 @@ public class EncodeSceneController {
     public void encode() {
         encodingData.setAllowedUsers(getSelectedUsers());
         if(encodingData.isValid()){
-            //TODO encoding
+            //TODO start
         }
+        ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new EncodingProgressScene(encodingData));
     }
 
     private List<User> getSelectedUsers(){
