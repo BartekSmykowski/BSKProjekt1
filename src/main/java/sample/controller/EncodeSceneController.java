@@ -24,6 +24,7 @@ public class EncodeSceneController {
     public ChoiceBox<EncodingModes> encodingModeChoiceBox;
     public ListView<CheckBox> encodingUsersListView;
     public Label saveDirectoryLabel;
+    public Label errorLabel;
 
 
     private EncodingData encodingData;
@@ -94,9 +95,10 @@ public class EncodeSceneController {
     public void encode() {
         encodingData.setAllowedUsers(getSelectedUsers());
         if(encodingData.isValid()){
-            //TODO start
+            ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new EncodingProgressScene(encodingData));
+        } else {
+            errorLabel.setText("Złe dane.");
         }
-        ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new EncodingProgressScene(encodingData));
     }
 
     private List<User> getSelectedUsers(){
