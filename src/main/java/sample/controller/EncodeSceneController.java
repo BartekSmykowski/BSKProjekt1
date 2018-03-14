@@ -3,8 +3,11 @@ package sample.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import sample.Settings;
 import sample.model.EncodingData;
 import sample.model.EncodingModes;
 import sample.model.User;
@@ -12,8 +15,10 @@ import sample.persistence.UsersLoader;
 import sample.scenesManage.ScenesManager;
 import sample.scenesManage.ScenesNames;
 
+import java.awt.*;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 public class EncodeSceneController {
     public TextField newFileNameTextField;
@@ -94,11 +99,23 @@ public class EncodeSceneController {
 
     public void encode() {
         encodingData.setAllowedUsers(getSelectedUsers());
+        encodingData.setSessionKey(generateSessionKey());
+        encodingData.setSaveFileName(newFileNameTextField.getText());
         if(encodingData.isValid()){
             ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new EncodingProgressScene(encodingData));
         } else {
             errorLabel.setText("Złe dane.");
         }
+    }
+
+    private byte[] generateSessionKey() {
+        byte[] key = new byte[Settings.SESSION_KEY_SIZE];
+        long seed = System.currentTimeMillis();
+        Point point = MouseInfo.getPointerInfo().getLocation();
+        seed *= point.x * point.y;
+        Random random = new Random(seed);
+        random.nextBytes(key);
+        return key;
     }
 
     private List<User> getSelectedUsers(){

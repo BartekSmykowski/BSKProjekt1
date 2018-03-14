@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 public abstract class EncoderJob implements Callable<Object> {
 
     protected DoubleProperty progress = new SimpleDoubleProperty();
-    private EncodingData encodingData;
+    protected EncodingData encodingData;
 
     public EncoderJob(EncodingData encodingData){
         this.encodingData = encodingData;
@@ -17,14 +17,17 @@ public abstract class EncoderJob implements Callable<Object> {
 
     @Override
     public Object call() throws Exception {
-        for(int i = 0; i < 100; i++){
+        int iterations = getNumberOfIterations();
+        for(int i = 0; i < iterations; i++){
             doStep();
-            progress.setValue((double)(i+1)/100);
+            progress.setValue((double)(i+1)/iterations);
         }
         return null;
     }
 
-    public abstract void doStep();
+    protected abstract void doStep();
+
+    protected abstract int getNumberOfIterations();
 
     public DoubleProperty progressProperty() {
         return progress;
