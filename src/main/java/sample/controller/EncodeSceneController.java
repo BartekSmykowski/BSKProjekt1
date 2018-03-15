@@ -99,8 +99,9 @@ public class EncodeSceneController {
 
     public void encode() {
         encodingData.setAllowedUsers(getSelectedUsers());
-        encodingData.setSessionKey(generateSessionKey());
         encodingData.setSaveFileName(newFileNameTextField.getText());
+        encodingData.setSessionKey(generateSessionKey());
+        encodingData.setInitialVector(generateInitialVector());
         if(encodingData.isValid()){
             ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new EncodingProgressScene(encodingData));
         } else {
@@ -108,14 +109,22 @@ public class EncodeSceneController {
         }
     }
 
+    private byte[] generateInitialVector() {
+        return generateRandomBytes(Settings.INITIAL_VECTOR_SIZE);
+    }
+
     private byte[] generateSessionKey() {
-        byte[] key = new byte[Settings.SESSION_KEY_SIZE];
+        return generateRandomBytes(Settings.SESSION_KEY_SIZE);
+    }
+
+    private byte[] generateRandomBytes(int size){
+        byte[] bytes = new byte[size];
         long seed = System.currentTimeMillis();
         Point point = MouseInfo.getPointerInfo().getLocation();
         seed *= point.x * point.y;
         Random random = new Random(seed);
-        random.nextBytes(key);
-        return key;
+        random.nextBytes(bytes);
+        return bytes;
     }
 
     private List<User> getSelectedUsers(){

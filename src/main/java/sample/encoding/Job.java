@@ -2,17 +2,14 @@ package sample.encoding;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import sample.model.EncodingData;
 
 import java.util.concurrent.Callable;
 
-public abstract class EncoderJob implements Callable<Object> {
+public abstract class Job implements Callable<Object> {
 
-    protected DoubleProperty progress = new SimpleDoubleProperty();
-    protected EncodingData encodingData;
+    private DoubleProperty progress = new SimpleDoubleProperty();
 
-    public EncoderJob(EncodingData encodingData){
-        this.encodingData = encodingData;
+    public Job(){
     }
 
     @Override
@@ -24,7 +21,7 @@ public abstract class EncoderJob implements Callable<Object> {
         }
         return null;
     }
-
+    
     protected abstract void doStep();
 
     protected abstract int getNumberOfIterations();

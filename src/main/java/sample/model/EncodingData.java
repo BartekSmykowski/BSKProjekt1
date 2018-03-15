@@ -13,6 +13,7 @@ public class EncodingData {
     private EncodingModes encodingMode;
     private List<User> allowedUsers;
     private byte[] sessionKey;
+    private byte[] initialVector;
     private String saveFileName;
 
     public EncodingData(){
@@ -22,7 +23,7 @@ public class EncodingData {
     public boolean isValid(){
         return selectedFile != null && saveDirectory != null
                 && encodingMode != null && sessionKey != null
-                && saveFileName != null;
+                && saveFileName != null && initialVector != null;
     }
 
 }

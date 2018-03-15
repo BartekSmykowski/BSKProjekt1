@@ -4,9 +4,9 @@ import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import sample.encoding.Encoder;
+import sample.encoding.JobExecutor;
 import sample.encoding.EncoderFactory;
-import sample.encoding.EncoderJob;
+import sample.encoding.Job;
 import sample.model.EncodingData;
 import sample.scenesManage.ScenesManager;
 import sample.scenesManage.ScenesNames;
@@ -25,7 +25,7 @@ public class EncodingProgressScene {
 
     private EncodingData encodingData;
 
-    private Encoder encoder;
+    private JobExecutor encoder;
 
     public EncodingProgressScene(EncodingData encodingData){
         this.encodingData = encodingData;
@@ -36,7 +36,7 @@ public class EncodingProgressScene {
 
         updateLabels();
 
-        EncoderJob encoderJob = EncoderFactory.produce(encodingData);
+        Job encoderJob = EncoderFactory.produce(encodingData);
 
         DoubleProperty progressProperty = encoderJob.progressProperty();
         encodingProgressBar.progressProperty().bind(progressProperty);
@@ -48,7 +48,7 @@ public class EncodingProgressScene {
                         }
                     });
 
-        encoder = new Encoder(encoderJob);
+        encoder = new JobExecutor(encoderJob);
         encoder.startEncoding();
     }
 
