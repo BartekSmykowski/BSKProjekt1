@@ -2,6 +2,7 @@ package sample.controller;
 
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -26,6 +27,7 @@ public class DecodeSceneController {
     public Label saveDirectoryLabel;
     public Label errorLabel;
     public ChoiceBox<String> usersChoiceBox;
+    public PasswordField passwordTextField;
 
     private DecodingData decodingData;
 
@@ -35,6 +37,13 @@ public class DecodeSceneController {
         decodingData = new DecodingData();
         loadUsersToMap();
         initChoiceBox();
+
+        //test
+        usersChoiceBox.getSelectionModel().selectFirst();
+        decodingData.setSaveDirectory(new File("C:\\Users\\Bartek\\Music"));
+        decodingData.setSelectedFile(new File("C:\\Users\\Bartek\\Music\\encoded"));
+        newFileName.setText("decoded");
+        passwordTextField.setText("qwe");
     }
 
     public void mainMenu() {
@@ -92,6 +101,7 @@ public class DecodeSceneController {
 
     public void decode() {
         decodingData.setSaveFileName(newFileName.getText());
+        decodingData.setPassword(passwordTextField.getText());
         if(decodingData.isValid()){
             ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new ProgressScene(new DecodeManager(decodingData)));
         } else {

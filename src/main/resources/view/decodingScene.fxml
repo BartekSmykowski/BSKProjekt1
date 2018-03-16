@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -59,6 +60,8 @@
             <children>
                 <Label text="Użytkownicy" />
             <ChoiceBox fx:id="usersChoiceBox" prefWidth="150.0" />
+            <Label text="Hasło:" />
+            <PasswordField fx:id="passwordTextField" />
             </children>
         </VBox>
         <Button layoutX="454.0" layoutY="344.0" mnemonicParsing="false" onMouseClicked="#mainMenu" text="Menu główne" />

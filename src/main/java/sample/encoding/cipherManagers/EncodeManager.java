@@ -8,6 +8,7 @@ import sample.model.EncodedFileHeader;
 import sample.model.ManagersData.DataConverter;
 import sample.model.ManagersData.EncodingData;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,7 +30,7 @@ public class EncodeManager extends Manager {
     protected byte[] loadFileData(Path path) {
         byte[] data = new byte[0];
         try {
-            Files.readAllBytes(path);
+            data = Files.readAllBytes(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,12 +46,16 @@ public class EncodeManager extends Manager {
         Map<String, String> usersKeysMap = new HashMap<>();
         encodingData.getAllowedUsers().forEach(user->usersKeysMap.put(user.getLogin(), user.getEncodedPrivateRsaKey()));
         fileHeader.setUsersKeys(usersKeysMap);
+        fileHeader.setExtension(getFileExtension(managerData.getSourcePath().toFile()));
 
         ObjectMapper objectMapper = new ObjectMapper();
 
         try(PrintWriter writer = new PrintWriter(path.toFile()))
         {
-            writer.print(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(fileHeader));
+            String headerJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(fileHeader);
+            writer.println(getLineCount(headerJson));
+            writer.print(headerJson);
+            writer.println();
         } catch (FileNotFoundException | JsonProcessingException e) {
             throw new CannotSaveUsersException(e.getMessage());
         }
@@ -61,4 +66,18 @@ public class EncodeManager extends Manager {
             e.printStackTrace();
         }
     }
+
+    private static int getLineCount(String text){
+        return text.split("[\n]").length;
+    }
+
+    private String getFileExtension(File file) {
+        String name = file.getName();
+        try {
+            return name.substring(name.lastIndexOf(".") + 1);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
 }

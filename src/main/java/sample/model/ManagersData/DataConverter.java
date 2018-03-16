@@ -29,10 +29,6 @@ public class DataConverter {
     public static ManagerData fromDecodingToManager(DecodingData decodingData){
         ManagerData managerData = new ManagerData();
 
-        Path destinationPath = Paths.get(
-                decodingData.getSaveDirectory().getAbsolutePath() + "\\" + decodingData.getSaveFileName()
-        );
-        managerData.setDestinationPath(destinationPath);
         Path sourcePath = decodingData.getSelectedFile().toPath();
         managerData.setSourcePath(sourcePath);
 
@@ -47,14 +43,24 @@ public class DataConverter {
         managerData.setInitialVector(encodedFileHeader.getInitialVector());
 
 
+        Path destinationPath = Paths.get(
+                decodingData.getSaveDirectory().getAbsolutePath() + "\\" + decodingData.getSaveFileName() + "." + encodedFileHeader.getExtension()
+        );
+        managerData.setDestinationPath(destinationPath);
+
         return managerData;
     }
 
     private static EncodedFileHeader getEncodedFileHeader(Path sourcePath) {
         EncodedFileHeader encodedFileHeader = null;
-        try(BufferedReader brTest = new BufferedReader(new FileReader(sourcePath.toFile()))){
-            String headerLine = brTest.readLine();
-            encodedFileHeader = objectMapper.readValue(headerLine, EncodedFileHeader.class);
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(sourcePath.toFile()))){
+            String lineWithJsonSize = bufferedReader.readLine();
+            int numberOfJsonLines = Integer.parseInt(lineWithJsonSize);
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int i = 0; i < numberOfJsonLines; i++){
+                stringBuilder.append(bufferedReader.readLine());
+            }
+            encodedFileHeader = objectMapper.readValue(stringBuilder.toString(), EncodedFileHeader.class);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -43,6 +43,7 @@ public class EncodeSceneController {
         Collection<User> users = usersLoader.loadUsers();
         users.forEach(user -> {
             CheckBox checkBox = new CheckBox(user.getLogin());
+            checkBox.setSelected(true);
             usersCheckBoxList.add(checkBox);
             usersMap.put(user.getLogin(), user);
         });
@@ -59,6 +60,13 @@ public class EncodeSceneController {
                     encodingModeLabel.setText(encodingMode.toString());
                     encodingData.setEncodingMode(encodingMode);
                 });
+        encodingModeChoiceBox.getSelectionModel().selectFirst();
+
+        //test
+        encodingData.setSaveDirectory(new File("C:\\Users\\Bartek\\Music"));
+        encodingData.setSelectedFile(new File("C:\\Users\\Bartek\\Music\\qwe.txt"));
+        newFileNameTextField.setText("encoded");
+
     }
 
     public void mainMenu() {
