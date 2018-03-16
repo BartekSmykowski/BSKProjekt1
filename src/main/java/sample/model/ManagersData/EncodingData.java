@@ -1,6 +1,8 @@
-package sample.model;
+package sample.model.ManagersData;
 
 import lombok.Data;
+import sample.model.EncodingModes;
+import sample.model.User;
 
 import java.io.File;
 import java.util.List;
@@ -15,7 +17,6 @@ public class EncodingData {
     private byte[] sessionKey;
     private byte[] initialVector;
     private String saveFileName;
-    private CipherModes cipherModes;
 
     public EncodingData(){
 

@@ -8,9 +8,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import sample.Settings;
-import sample.model.CipherModes;
-import sample.model.EncodingData;
+import sample.encoding.cipherManagers.EncodeManager;
 import sample.model.EncodingModes;
+import sample.model.ManagersData.EncodingData;
 import sample.model.User;
 import sample.persistence.UsersLoader;
 import sample.scenesManage.ScenesManager;
@@ -102,9 +102,8 @@ public class EncodeSceneController {
         encodingData.setSaveFileName(newFileNameTextField.getText());
         encodingData.setSessionKey(generateSessionKey());
         encodingData.setInitialVector(generateInitialVector());
-        encodingData.setCipherModes(CipherModes.ENCRYPT);
         if(encodingData.isValid()){
-            ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new EncodingProgressScene(encodingData));
+            ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new ProgressScene(new EncodeManager(encodingData)));
         } else {
             errorLabel.setText("Złe dane.");
         }

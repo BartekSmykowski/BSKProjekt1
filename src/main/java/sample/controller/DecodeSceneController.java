@@ -5,8 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import sample.model.CipherModes;
-import sample.model.EncodingData;
+import sample.encoding.cipherManagers.DecodeManager;
+import sample.model.ManagersData.DecodingData;
 import sample.model.User;
 import sample.persistence.UsersLoader;
 import sample.scenesManage.ScenesManager;
@@ -14,7 +14,6 @@ import sample.scenesManage.ScenesNames;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,12 +27,12 @@ public class DecodeSceneController {
     public Label errorLabel;
     public ChoiceBox<String> usersChoiceBox;
 
-    private EncodingData encodingData;
+    private DecodingData decodingData;
 
     private Map<String, User> usersMap = new HashMap<>();
 
     public void initialize(){
-        encodingData = new EncodingData();
+        decodingData = new DecodingData();
         loadUsersToMap();
         initChoiceBox();
     }
@@ -49,7 +48,7 @@ public class DecodeSceneController {
                 .selectedIndexProperty()
                 .addListener((observableValue, oldVal, newVal) -> {
                     String selectedUser = usersChoiceBox.getItems().get((Integer) newVal);
-                    encodingData.setAllowedUsers(Collections.singletonList(usersMap.get(selectedUser)));
+                    decodingData.setSelectedUser(usersMap.get(selectedUser));
                 });
     }
 
@@ -63,7 +62,7 @@ public class DecodeSceneController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Wybierz plik do szyfrowania.");
         File selectedFile = fileChooser.showOpenDialog(ScenesManager.getStage());
-        encodingData.setSelectedFile(selectedFile);
+        decodingData.setSelectedFile(selectedFile);
         if (selectedFile != null) {
             chosenFileLabel.setText(selectedFile.getName());
             double fileSizeMb = (double)selectedFile.length() / 1000000;
@@ -85,19 +84,16 @@ public class DecodeSceneController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Wybierz folder zapisu.");
         File saveDirectory = directoryChooser.showDialog(ScenesManager.getStage());
-        encodingData.setSaveDirectory(saveDirectory);
+        decodingData.setSaveDirectory(saveDirectory);
         if (saveDirectory != null) {
             saveDirectoryLabel.setText(saveDirectory.getAbsolutePath());
         }
     }
 
     public void decode() {
-        encodingData.setSaveFileName(newFileName.getText());
-        encodingData.setSessionKey(new byte[0]);
-        encodingData.setInitialVector(new byte[0]);
-        encodingData.setCipherModes(CipherModes.DECRYPT);
-        if(encodingData.isValid()){
-            ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new EncodingProgressScene(encodingData));
+        decodingData.setSaveFileName(newFileName.getText());
+        if(decodingData.isValid()){
+            ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new ProgressScene(new DecodeManager(decodingData)));
         } else {
             errorLabel.setText("Złe dane.");
         }
