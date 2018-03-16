@@ -6,5 +6,6 @@ public class Settings {
 	public static final int RSA_KEY_SIZE = 4096;
 	public static final int SESSION_KEY_SIZE = 32;
 	public static final int INITIAL_VECTOR_SIZE = 16;
+	public static final int DATA_PACKET_SIZE = 16;
 
 }

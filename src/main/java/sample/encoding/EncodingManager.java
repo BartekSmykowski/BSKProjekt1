@@ -1,11 +1,16 @@
 package sample.encoding;
 
+import javafx.beans.property.DoubleProperty;
+import sample.encoding.encoders.Encoder;
+import sample.encoding.encoders.EncoderFactory;
 import sample.model.EncodingData;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class EncodingManager {
 
@@ -13,6 +18,7 @@ public class EncodingManager {
     private Encoder encoder;
     private Path sourceFilePath;
     private Path destinationFilePath;
+    private EncodeJobExecutor jobExecutor;
 
     public EncodingManager(EncodingData encodingData){
         this.encodingData = encodingData;
@@ -23,11 +29,19 @@ public class EncodingManager {
 
         sourceFilePath = encodingData.getSelectedFile().toPath();
         destinationFilePath = Paths.get(encodingData.getSaveDirectory().getAbsolutePath() + "\\" + encodingData.getSaveFileName());
+
+        EncodingJob encodingJob = new EncodingJob(encoder, tryLoadFileData(sourceFilePath), encodingData.getCipherModes());
+        jobExecutor = new EncodeJobExecutor(encodingJob);
     }
 
     public void performEncoding(){
-        byte[] data = tryLoadFileData(sourceFilePath);
-        byte[] encoded = encoder.encode(data);
+        Future<byte[]> future = jobExecutor.execute();
+        byte[] encoded = new byte[0];
+        try {
+            encoded = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         trySaveDataToFile(encoded, destinationFilePath);
     }
 
@@ -40,7 +54,6 @@ public class EncodingManager {
         return null;
     }
 
-
     public void trySaveDataToFile(byte[] data, Path path){
         try {
             Files.write(path, data);
@@ -49,7 +62,8 @@ public class EncodingManager {
         }
     }
 
-
-
+    public DoubleProperty progressProperty(){
+        return encoder.progressProperty();
+    }
 
 }

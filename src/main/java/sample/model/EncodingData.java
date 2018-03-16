@@ -15,6 +15,7 @@ public class EncodingData {
     private byte[] sessionKey;
     private byte[] initialVector;
     private String saveFileName;
+    private CipherModes cipherModes;
 
     public EncodingData(){
 
@@ -23,7 +24,8 @@ public class EncodingData {
     public boolean isValid(){
         return selectedFile != null && saveDirectory != null
                 && encodingMode != null && sessionKey != null
-                && saveFileName != null && initialVector != null;
+                && saveFileName != null && initialVector != null
+                && allowedUsers != null;
     }
 
 }

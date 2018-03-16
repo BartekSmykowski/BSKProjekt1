@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import sample.Settings;
+import sample.model.CipherModes;
 import sample.model.EncodingData;
 import sample.model.EncodingModes;
 import sample.model.User;
@@ -75,7 +76,6 @@ public class EncodeSceneController {
             fileSizeLabel.setText(String.format("%.2f", fileSizeMb));
             extensionLabel.setText(getFileExtension(selectedFile));
         }
-
     }
 
     private String getFileExtension(File file) {
@@ -102,6 +102,7 @@ public class EncodeSceneController {
         encodingData.setSaveFileName(newFileNameTextField.getText());
         encodingData.setSessionKey(generateSessionKey());
         encodingData.setInitialVector(generateInitialVector());
+        encodingData.setCipherModes(CipherModes.ENCRYPT);
         if(encodingData.isValid()){
             ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new EncodingProgressScene(encodingData));
         } else {

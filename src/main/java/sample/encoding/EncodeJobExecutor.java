@@ -1,20 +1,18 @@
 package sample.encoding;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class JobExecutor {
+public class EncodeJobExecutor {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private Callable<Object> task;
-    private Future future;
+    private EncodingJob task;
 
-    public JobExecutor(Job task){
+    public EncodeJobExecutor(EncodingJob task){
         this.task = task;
     }
 
-    public void startEncoding() {
-        future = executorService.submit(task);
+    public Future<byte[]> execute() {
+        return executorService.submit(task);
     }
 }
