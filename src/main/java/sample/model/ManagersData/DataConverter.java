@@ -1,6 +1,8 @@
 package sample.model.ManagersData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 import sample.model.EncodedFileHeader;
 
 import java.io.BufferedReader;
@@ -38,7 +40,8 @@ public class DataConverter {
 
         String sessionKey = encodedFileHeader.getUsersKeys().get(decodingData.getSelectedUser().getLogin());
 
-        managerData.setSessionKey(sessionKey.getBytes());
+        byte[] sessionKeyBytes = tryGetSessionKeyBytes(sessionKey);
+        managerData.setSessionKey(sessionKeyBytes);
 
         managerData.setInitialVector(encodedFileHeader.getInitialVector());
 
@@ -49,6 +52,16 @@ public class DataConverter {
         managerData.setDestinationPath(destinationPath);
 
         return managerData;
+    }
+
+    private static byte[] tryGetSessionKeyBytes(String sessionKey) {
+        byte[] sessionKeyBytes = new byte[0];
+        try {
+            sessionKeyBytes = Base64.decode(sessionKey);
+        } catch (Base64DecodingException e) {
+            e.printStackTrace();
+        }
+        return sessionKeyBytes;
     }
 
     private static EncodedFileHeader getEncodedFileHeader(Path sourcePath) {

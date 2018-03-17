@@ -2,6 +2,7 @@ package sample.encoding.cipherManagers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 import sample.exception.CannotSaveUsersException;
 import sample.model.CipherModes;
 import sample.model.EncodedFileHeader;
@@ -14,9 +15,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
-import java.util.Map;
 
 public class EncodeManager extends Manager {
     private EncodingData encodingData;
@@ -43,9 +41,7 @@ public class EncodeManager extends Manager {
         fileHeader.setMode(managerData.getMode());
         fileHeader.setInitialVector(managerData.getInitialVector());
 
-        Map<String, String> usersKeysMap = new HashMap<>();
-        encodingData.getAllowedUsers().forEach(user->usersKeysMap.put(user.getLogin(), user.getEncodedPrivateRsaKey()));
-        fileHeader.setUsersKeys(usersKeysMap);
+        fileHeader.setUsersKeys(encodingData.getAllowedUsers());
         fileHeader.setExtension(getFileExtension(managerData.getSourcePath().toFile()));
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -56,15 +52,16 @@ public class EncodeManager extends Manager {
             writer.println(getLineCount(headerJson));
             writer.print(headerJson);
             writer.println();
+            writer.print(Base64.encode(data));
         } catch (FileNotFoundException | JsonProcessingException e) {
             throw new CannotSaveUsersException(e.getMessage());
         }
 
-        try {
-            Files.write(path, data, StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Files.write(path, data, StandardOpenOption.APPEND);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private static int getLineCount(String text){

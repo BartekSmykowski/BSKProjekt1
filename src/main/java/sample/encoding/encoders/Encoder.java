@@ -24,55 +24,50 @@ public abstract class Encoder {
 
     public byte[] encode(byte[] data){
 
+        tryInitCipher(Cipher.ENCRYPT_MODE);
+
+        byte[] encodedBytes = performCiphering(data);
+        return encodedBytes;
+    }
+
+    public byte[] decode(byte[] encodedData){
+        tryInitCipher(Cipher.DECRYPT_MODE);
+        byte[] original = performCiphering(encodedData);
+        return original;
+    }
+
+    private byte[] performCiphering(byte[] data) {
         progress.setValue(0);
 
         int dataSize = data.length;
-        int numberOfIterations = dataSize/Settings.DATA_PACKET_SIZE;
+        int numberOfIterations = dataSize/ Settings.DATA_PACKET_SIZE;
 
-        tryInitCipher(Cipher.ENCRYPT_MODE);
+        byte[] bytesAfterOperation = new byte[(numberOfIterations+1)*Settings.DATA_PACKET_SIZE];
 
-        byte[] encodedBytes = new byte[(numberOfIterations+1)*Settings.DATA_PACKET_SIZE];
+//        for(int i = 0; i < numberOfIterations; i++){
+//            progress.setValue((i+1)/numberOfIterations);
+//            byte[] bytes = doStep(data, i);
+//            System.arraycopy(bytes, 0, bytesAfterOperation, i * Settings.DATA_PACKET_SIZE, bytes.length);
+//        }
 
-        for(int i = 0; i < numberOfIterations; i++){
-            progress.setValue((i+1)/numberOfIterations);
-            byte[] bytes = doStep(data, i);
-            System.arraycopy(bytes, 0, encodedBytes, i * Settings.DATA_PACKET_SIZE, bytes.length);
-        }
-
-        byte[] finalBytes = tryDoFinal();
-        System.arraycopy(finalBytes, 0, encodedBytes, numberOfIterations*Settings.DATA_PACKET_SIZE, finalBytes.length);
-        return encodedBytes;
+        byte[] finalBytes = tryDoFinal(data);
+        //System.arraycopy(finalBytes, 0, bytesAfterOperation, 0, finalBytes.length);
+        progress.set(1.0);
+        return finalBytes;
     }
 
     public byte[] doStep(byte[] packet, int iteration){
         return cipher.update(packet, iteration * Settings.DATA_PACKET_SIZE, Settings.DATA_PACKET_SIZE);
     }
 
-    private byte[] tryDoFinal() {
+    private byte[] tryDoFinal(byte[] data) {
         byte[] encodedBytes = new byte[0];
         try {
-            encodedBytes = cipher.doFinal();
+            encodedBytes = cipher.doFinal(data);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
         }
         return encodedBytes;
-    }
-
-    public byte[] decode(byte[] encodedData){
-        progress.setValue(0);
-
-        int dataSize = encodedData.length;
-        int numberOfIterations = dataSize/Settings.DATA_PACKET_SIZE;
-
-        tryInitCipher(Cipher.DECRYPT_MODE);
-
-        for(int i = 0; i < numberOfIterations; i++){
-            progress.setValue((i+1)/numberOfIterations);
-            doStep(encodedData, i);
-        }
-
-        byte[] original = tryDoFinal();
-        return original;
     }
 
     protected abstract void tryInitCipher(int decryptMode);

@@ -1,5 +1,6 @@
 package sample.controller;
 
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -106,10 +107,16 @@ public class EncodeSceneController {
     }
 
     public void encode() {
-        encodingData.setAllowedUsers(getSelectedUsers());
         encodingData.setSaveFileName(newFileNameTextField.getText());
-        encodingData.setSessionKey(generateSessionKey());
+        byte[] sessionKey = generateSessionKey();
+        encodingData.setSessionKey(sessionKey);
         encodingData.setInitialVector(generateInitialVector());
+
+        Map<String, String> selectedUsers = new HashMap<>();
+        for(User user : getSelectedUsers()){
+            selectedUsers.put(user.getLogin(), Base64.encode(sessionKey));
+        }
+        encodingData.setAllowedUsers(selectedUsers);
         if(encodingData.isValid()){
             ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new ProgressScene(new EncodeManager(encodingData)));
         } else {
