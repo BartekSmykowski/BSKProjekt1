@@ -1,4 +1,4 @@
-package sample.encoding.encoders;
+package sample.ciphering.cipherers;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -11,14 +11,13 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 
-public abstract class Encoder {
-
+public abstract class Cipherer {
     protected Cipher cipher;
     protected SecretKeySpec key;
     private DoubleProperty progress = new SimpleDoubleProperty();
 
-    public Encoder(byte[] sessionKey, String algorithm){
-        key = new SecretKeySpec(sessionKey, "AES");
+    public Cipherer(byte[] key, String algorithm){
+        this.key = new SecretKeySpec(key, "AES");
         tryCreateCipher(algorithm);
     }
 

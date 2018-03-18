@@ -1,11 +1,11 @@
-package sample.encoding.cipherManagers;
+package sample.ciphering.cipherManagers;
 
 import javafx.beans.property.DoubleProperty;
-import sample.encoding.CipherJobExecutor;
-import sample.encoding.encoders.Encoder;
-import sample.encoding.encoders.EncoderFactory;
-import sample.encoding.jobs.Job;
-import sample.encoding.jobs.JobFactory;
+import sample.ciphering.CipherJobExecutor;
+import sample.ciphering.cipherers.Cipherer;
+import sample.ciphering.cipherers.EncoderFactory;
+import sample.ciphering.jobs.Job;
+import sample.ciphering.jobs.JobFactory;
 import sample.model.CipherModes;
 import sample.model.ManagersData.ManagerData;
 
@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
 
 public abstract class Manager {
 
-    private Encoder encoder;
+    private Cipherer cipherer;
     private Path sourceFilePath;
     private Path destinationFilePath;
     private CipherJobExecutor jobExecutor;
@@ -23,12 +23,12 @@ public abstract class Manager {
 
     public Manager(ManagerData managerData, CipherModes cipherMode){
         this.managerData = managerData;
-        encoder = EncoderFactory.produce(managerData.getMode(), managerData.getSessionKey(), managerData.getInitialVector());
+        cipherer = EncoderFactory.produce(managerData.getMode(), managerData.getSessionKey(), managerData.getInitialVector());
 
         sourceFilePath = managerData.getSourcePath();
         destinationFilePath = managerData.getDestinationPath();
 
-        Job job = JobFactory.produce(encoder, loadFileData(sourceFilePath), cipherMode);
+        Job job = JobFactory.produce(cipherer, loadFileData(sourceFilePath), cipherMode);
 
         jobExecutor = new CipherJobExecutor(job);
     }
@@ -49,7 +49,7 @@ public abstract class Manager {
     protected abstract void saveDataToFile(byte[] data, Path path);
 
     public DoubleProperty progressProperty(){
-        return encoder.progressProperty();
+        return cipherer.progressProperty();
     }
 
 }

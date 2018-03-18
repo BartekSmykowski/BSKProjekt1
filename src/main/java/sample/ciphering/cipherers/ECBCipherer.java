@@ -1,11 +1,11 @@
-package sample.encoding.encoders;
+package sample.ciphering.cipherers;
 
 import java.security.InvalidKeyException;
 
-public class ECBEncoder extends Encoder {
+public class ECBCipherer extends Cipherer {
 
-    public ECBEncoder(byte[] sessionKey) {
-        super(sessionKey, "AES/ECB/PKCS5Padding");
+    public ECBCipherer(byte[] key) {
+        super(key, "AES/ECB/PKCS5Padding");
     }
 
     @Override

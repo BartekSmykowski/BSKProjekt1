@@ -1,4 +1,4 @@
-package sample.encoding.cipherManagers;
+package sample.ciphering.cipherManagers;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import sample.model.CipherModes;

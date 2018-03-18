@@ -1,16 +1,16 @@
-package sample.encoding.jobs;
+package sample.ciphering.jobs;
 
-import sample.encoding.encoders.Encoder;
+import sample.ciphering.cipherers.Cipherer;
 
 import java.util.concurrent.Callable;
 
 public abstract class Job implements Callable<byte[]> {
 
-    protected Encoder encoder;
+    protected Cipherer cipherer;
     protected byte[] data;
 
-    public Job(Encoder encoder, byte[] data){
-        this.encoder = encoder;
+    public Job(Cipherer cipherer, byte[] data){
+        this.cipherer = cipherer;
         this.data = data;
     }
 

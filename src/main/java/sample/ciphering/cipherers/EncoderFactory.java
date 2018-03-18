@@ -1,20 +1,20 @@
-package sample.encoding.encoders;
+package sample.ciphering.cipherers;
 
 import sample.exception.NoSuchEncodingModeException;
 import sample.model.EncodingModes;
 
 public class EncoderFactory {
 
-    public static Encoder produce(EncodingModes mode, byte[] sessionKey, byte[] initialVector){
+    public static Cipherer produce(EncodingModes mode, byte[] sessionKey, byte[] initialVector){
 
         if(mode.equals(EncodingModes.ECB)){
-            return new ECBEncoder(sessionKey);
+            return new ECBCipherer(sessionKey);
         } else if(mode.equals(EncodingModes.CBC)){
-            return new CBCEncoder(sessionKey, initialVector);
+            return new CBCCipherer(sessionKey, initialVector);
         } else if(mode.equals(EncodingModes.CFB)){
-            return new CFBEncoder(sessionKey, initialVector);
+            return new CFBCipherer(sessionKey, initialVector);
         } else if(mode.equals(EncodingModes.OFB)){
-            return new OFBEncoder(sessionKey, initialVector);
+            return new OFBCipherer(sessionKey, initialVector);
         }
         throw new NoSuchEncodingModeException(mode.toString());
     }

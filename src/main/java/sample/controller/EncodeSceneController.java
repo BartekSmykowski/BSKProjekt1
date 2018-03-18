@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import sample.Settings;
-import sample.encoding.cipherManagers.EncodeManager;
+import sample.ciphering.cipherManagers.EncodeManager;
 import sample.model.EncodingModes;
 import sample.model.ManagersData.EncodingData;
 import sample.model.User;

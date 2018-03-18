@@ -1,6 +1,6 @@
-package sample.encoding;
+package sample.ciphering;
 
-import sample.encoding.jobs.Job;
+import sample.ciphering.jobs.Job;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

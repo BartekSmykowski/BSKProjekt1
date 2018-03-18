@@ -2,25 +2,19 @@ package sample.controller;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.security.InvalidKeyException;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Collection;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import sample.Settings;
-import sample.encoding.encoders.ECBEncoder;
+import sample.ciphering.cipherers.Cipherer;
+import sample.ciphering.cipherers.ECBCipherer;
+import sample.ciphering.hashing.SHA256Hasher;
 import sample.exception.CannotRegisterUserException;
+import sample.ciphering.key.generation.RsaKeyGenerator;
 import sample.model.User;
 import sample.persistence.UsersLoader;
 import sample.persistence.UsersSaver;
@@ -54,30 +48,22 @@ public class RegisterSceneController {
 	}
 
 	public void register() {
-		try {
-			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(Settings.RSA_KEY_SIZE);
-			KeyPair keyPair = keyPairGenerator.genKeyPair();
-			byte[] privateKey = keyPair.getPrivate().getEncoded();
-			byte[] publicKey = keyPair.getPublic().getEncoded();
+		User user = createUserFromInput();
+		saveUser(user);
+	}
 
-			String password = passwordField.getText();
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			byte[] hashedPasswordBytes = digest.digest(password.getBytes());
+	private User createUserFromInput() {
+		KeyPair keyPair = new RsaKeyGenerator(Settings.RSA_KEY_SIZE).generate();
+		byte[] privateKey = keyPair.getPrivate().getEncoded();
+		byte[] publicKey = keyPair.getPublic().getEncoded();
 
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-			SecretKeySpec secretKeySpec = new SecretKeySpec(hashedPasswordBytes, "AES");
-			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+		String password = passwordField.getText();
+		byte[] hashedPasswordBytes = new SHA256Hasher().hash(password.getBytes());
 
-			byte[] encodedPrivateKey = cipher.doFinal(privateKey);
+		Cipherer cipherer = new ECBCipherer(hashedPasswordBytes);
+		byte[] encodedPrivateKey = cipherer.encode(privateKey);
 
-			User user = new User(loginTextField.getText(), encodedPrivateKey, publicKey);
-			saveUser(user);
-
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
-				| BadPaddingException e) {
-			throw new CannotRegisterUserException(e);
-		}
+		return new User(loginTextField.getText(), encodedPrivateKey, publicKey);
 	}
 
 	private void saveUser(User user) {

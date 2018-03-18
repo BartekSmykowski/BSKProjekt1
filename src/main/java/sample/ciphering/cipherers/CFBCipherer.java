@@ -1,14 +1,14 @@
-package sample.encoding.encoders;
+package sample.ciphering.cipherers;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 
-public class CBCEncoder extends Encoder {
+public class CFBCipherer extends Cipherer {
     private IvParameterSpec ivParameterSpec;
 
-    public CBCEncoder(byte[] sessionKey, byte[] initialVector) {
-        super(sessionKey, "AES/CBC/PKCS5Padding");
+    public CFBCipherer(byte[] key, byte[] initialVector) {
+        super(key, "AES/CFB/NoPadding");
         ivParameterSpec = new IvParameterSpec(initialVector);
     }
 
@@ -20,5 +20,4 @@ public class CBCEncoder extends Encoder {
             e.printStackTrace();
         }
     }
-
 }

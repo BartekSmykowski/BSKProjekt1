@@ -1,4 +1,4 @@
-package sample.encoding.cipherManagers;
+package sample.ciphering.cipherManagers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

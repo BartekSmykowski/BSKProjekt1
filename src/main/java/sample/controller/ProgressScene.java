@@ -3,7 +3,7 @@ package sample.controller;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import sample.encoding.cipherManagers.Manager;
+import sample.ciphering.cipherManagers.Manager;
 import sample.scenesManage.ScenesManager;
 import sample.scenesManage.ScenesNames;
 

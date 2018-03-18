@@ -6,7 +6,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import sample.encoding.cipherManagers.DecodeManager;
+import sample.ciphering.cipherManagers.DecodeManager;
 import sample.model.ManagersData.DecodingData;
 import sample.model.User;
 import sample.persistence.UsersLoader;

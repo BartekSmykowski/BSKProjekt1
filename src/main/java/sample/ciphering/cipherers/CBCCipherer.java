@@ -1,14 +1,14 @@
-package sample.encoding.encoders;
+package sample.ciphering.cipherers;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 
-public class OFBEncoder extends Encoder {
+public class CBCCipherer extends Cipherer {
     private IvParameterSpec ivParameterSpec;
 
-    public OFBEncoder(byte[] sessionKey, byte[] initialVector) {
-        super(sessionKey, "AES/OFB/NoPadding");
+    public CBCCipherer(byte[] key, byte[] initialVector) {
+        super(key, "AES/CBC/PKCS5Padding");
         ivParameterSpec = new IvParameterSpec(initialVector);
     }
 
@@ -20,4 +20,5 @@ public class OFBEncoder extends Encoder {
             e.printStackTrace();
         }
     }
+
 }
