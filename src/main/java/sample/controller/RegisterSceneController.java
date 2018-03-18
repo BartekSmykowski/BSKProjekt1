@@ -25,22 +25,29 @@ public class RegisterSceneController {
 	public TextField loginTextField;
 	public PasswordField passwordField;
 
-	public RegisterSceneController() {
-		Field field;
+	static {
+		tryInitializingCryptographicLibrary();
+	}
+
+	private static void tryInitializingCryptographicLibrary()
+	{
 		try {
-			field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
-			field.setAccessible(true);
-
-			Field modifiersField = Field.class.getDeclaredField("modifiers");
-			modifiersField.setAccessible(true);
-			modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
-			field.set(null, false);
-
+			setCryptographicLibraryAccessible();
 		} catch (NoSuchFieldException | SecurityException | ClassNotFoundException | IllegalArgumentException
 				| IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private static void setCryptographicLibraryAccessible()
+			throws NoSuchFieldException, ClassNotFoundException, IllegalAccessException
+	{
+		Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
+		field.setAccessible(true);
+		Field modifiersField = Field.class.getDeclaredField("modifiers");
+		modifiersField.setAccessible(true);
+		modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+		field.set(null, false);
 	}
 
 	public void mainMenu() {
