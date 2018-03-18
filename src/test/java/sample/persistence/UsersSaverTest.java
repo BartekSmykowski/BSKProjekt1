@@ -29,17 +29,17 @@ public class UsersSaverTest
 
 	@Test
 	void shouldNotChangeContentsOfPrivateKeyUsersFile() throws IOException {
-		Map<String, Object> before = readFile("users/privateKeyUsers.json");
+		Map<String, Object> before = readFile("users/privateKeyUsersTest.json");
 		usersSaver.save(usersData);
-		Map<String, Object> after = readFile("users/privateKeyUsers.json");
+		Map<String, Object> after = readFile("users/privateKeyUsersTest.json");
 		assertThat(before).isEqualTo(after);
 	}
 
 	@Test
 	void shouldNotChangeContentsOfPublicKeyUsersFile() throws IOException {
-		Map<String, Object> before = readFile("users/publicKeyUsers.json");
+		Map<String, Object> before = readFile("users/publicKeyUsersTest.json");
 		usersSaver.save(usersData);
-		Map<String, Object> after = readFile("users/publicKeyUsers.json");
+		Map<String, Object> after = readFile("users/publicKeyUsersTest.json");
 		assertThat(before).isEqualTo(after);
 	}
 

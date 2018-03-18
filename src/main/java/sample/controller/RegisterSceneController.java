@@ -19,6 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import sample.Settings;
+import sample.encoding.encoders.ECBEncoder;
 import sample.exception.CannotRegisterUserException;
 import sample.model.User;
 import sample.persistence.UsersLoader;
@@ -69,8 +70,6 @@ public class RegisterSceneController {
 			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
 
 			byte[] encodedPrivateKey = cipher.doFinal(privateKey);
-			System.out.println("Public key: " + Arrays.toString(publicKey));
-			System.out.println("Encoded private key: " + Arrays.toString(encodedPrivateKey));
 
 			User user = new User(loginTextField.getText(), encodedPrivateKey, publicKey);
 			saveUser(user);
