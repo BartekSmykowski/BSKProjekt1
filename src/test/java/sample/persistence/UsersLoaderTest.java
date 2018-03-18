@@ -9,19 +9,19 @@ import org.junit.jupiter.api.Test;
 
 import sample.model.User;
 
-public class UsersLoaderTest {
+class UsersLoaderTest {
 	private UsersLoader usersLoader;
-	
+
 	@BeforeEach
-	public void createUsersLoader() {
+	void createUsersLoader() {
 		this.usersLoader = new UsersLoader();
 	}
 	
 	@Test
-	public void shouldLoadTwoUsers() {
+	void shouldLoadTwoUsers() {
 		Collection<User> users = usersLoader.loadUsers();
 		assertThat(users).hasSize(2);
-		assertThat(users).contains(new User("exampleLogin", "somePrivateHash", "somePublicHash"));
-		assertThat(users).contains(new User("exampleLogin2", "somePrivateHash2", "somePublicHash2"));
+		assertThat(users).contains(new User("exampleLogin", "somePrivateHash1".getBytes(), "somePublicHash11".getBytes()));
+		assertThat(users).contains(new User("exampleLogin2", "somePrivateHash2".getBytes(), "somePublicHash22".getBytes()));
 	}
 }

@@ -7,6 +7,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.crypto.BadPaddingException;
@@ -67,11 +68,11 @@ public class RegisterSceneController {
 			SecretKeySpec secretKeySpec = new SecretKeySpec(hashedPasswordBytes, "AES");
 			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
 
-			String encodedPrivateKey = new String(cipher.doFinal());
-			System.out.println("Public key: " + new String(publicKey));
-			System.out.println("Encoded private key: " + encodedPrivateKey);
+			byte[] encodedPrivateKey = cipher.doFinal(privateKey);
+			System.out.println("Public key: " + Arrays.toString(publicKey));
+			System.out.println("Encoded private key: " + Arrays.toString(encodedPrivateKey));
 
-			User user = new User(loginTextField.getText(), encodedPrivateKey, new String(publicKey));
+			User user = new User(loginTextField.getText(), encodedPrivateKey, publicKey);
 			saveUser(user);
 
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException

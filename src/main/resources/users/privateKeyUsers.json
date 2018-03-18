@@ -1,4 +1,4 @@
 {
-	"exampleLogin": "somePrivateHash",
-	"exampleLogin2": "somePrivateHash2"
+	"exampleLogin": "c29tZVByaXZhdGVIYXNoMQ==", //somePrivateHash1
+	"exampleLogin2": "c29tZVByaXZhdGVIYXNoMg==" //somePrivateHash2
 }

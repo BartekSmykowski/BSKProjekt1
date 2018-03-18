@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class User {
 	private final String login;
-	private final String encodedPrivateRsaKey;
-	private final String publicRsaKey;
+	private final byte[] encodedPrivateRsaKey;
+	private final byte[] publicRsaKey;
 }
