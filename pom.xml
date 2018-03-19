@@ -30,17 +30,6 @@
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-crypto</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.7</version>
-		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -78,4 +67,4 @@
 		</dependency>
 	</dependencies>
 
-</project>
+</project>	
