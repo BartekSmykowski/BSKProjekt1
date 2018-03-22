@@ -64,8 +64,8 @@ public class EncodeSceneController {
         encodingModeChoiceBox.getSelectionModel().selectFirst();
 
         //test
-        encodingData.setSaveDirectory(new File("C:\\Users\\Bartek\\Music"));
-        encodingData.setSelectedFile(new File("C:\\Users\\Bartek\\Music\\qwe.txt"));
+        encodingData.setSaveDirectory(new File(Settings.TEST_ENCODED_FILE_DIRECTORY));
+        encodingData.setSelectedFile(new File(Settings.TEST_ORIGINAL_FILE));
         newFileNameTextField.setText("encoded");
 
     }

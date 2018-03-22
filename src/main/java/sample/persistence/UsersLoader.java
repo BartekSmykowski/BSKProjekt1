@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
+import javafx.scene.control.CheckBox;
 import sample.Settings;
 import sample.exception.CannotReadUsersException;
 import sample.model.User;
@@ -12,11 +13,23 @@ import java.io.File;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class UsersLoader {
 	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	public Map<String, User> loadUsersMap(){
+		Map<String, User> usersMap = new HashMap<>();
+		Collection<User> users = loadUsers();
+		users.forEach(user -> {
+			CheckBox checkBox = new CheckBox(user.getLogin());
+			checkBox.setSelected(true);
+			usersMap.put(user.getLogin(), user);
+		});
+		return usersMap;
+	}
 
 	public Collection<User> loadUsers() {
 		Map<String, byte[]> privateKeyUsers = loadUsers(Settings.USERS_WITH_PRIVATE_KEY_PATH);

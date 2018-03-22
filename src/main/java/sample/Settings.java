@@ -7,4 +7,12 @@ public class Settings {
 	public static final int SESSION_KEY_SIZE = 32;
 	public static final int INITIAL_VECTOR_SIZE = 16;
 	public static final int DATA_PACKET_SIZE = 16;
+
+
+	public static final String TEST_ORIGINAL_FILE = "testFiles/testOriginal.txt";
+	public static final String TEST_ENCODED_FILE_NAME = "encoded";
+	public static final String TEST_ENCODED_FILE_DIRECTORY = "testFiles";
+	public static final String TEST_DECODED_FILE_NAME = "decoded";
+	public static final String TEST_DECODED_FILE_SAVE_DIRECTORY = "testFiles";
+
   }
