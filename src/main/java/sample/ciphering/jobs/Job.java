@@ -1,15 +1,15 @@
 package sample.ciphering.jobs;
 
-import sample.ciphering.cipherers.Cipherer;
+import sample.ciphering.cipherers.AES.AESCipherer;
 
 import java.util.concurrent.Callable;
 
 public abstract class Job implements Callable<byte[]> {
 
-    protected Cipherer cipherer;
+    protected AESCipherer cipherer;
     protected byte[] data;
 
-    public Job(Cipherer cipherer, byte[] data){
+    public Job(AESCipherer cipherer, byte[] data){
         this.cipherer = cipherer;
         this.data = data;
     }

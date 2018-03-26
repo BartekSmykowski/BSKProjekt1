@@ -1,10 +1,10 @@
-package sample.ciphering.cipherers;
+package sample.ciphering.cipherers.AES;
 
 import java.security.InvalidKeyException;
 
-public class ECBCipherer extends Cipherer {
+public class ECBAESCipherer extends AESCipherer {
 
-    public ECBCipherer(byte[] key) {
+    public ECBAESCipherer(byte[] key) {
         super(key, "AES/ECB/PKCS5Padding");
     }
 

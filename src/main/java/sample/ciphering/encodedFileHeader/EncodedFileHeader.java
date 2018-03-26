@@ -1,6 +1,7 @@
-package sample.model;
+package sample.ciphering.encodedFileHeader;
 
 import lombok.Data;
+import sample.model.EncodingModes;
 
 import java.util.Map;
 
@@ -10,4 +11,5 @@ public class EncodedFileHeader {
     private byte[] initialVector;
     private Map<String, String> usersKeys;
     private String extension;
+
 }

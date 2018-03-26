@@ -5,26 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import sample.exception.CannotSaveUsersException;
 import sample.model.CipherModes;
-import sample.model.EncodedFileHeader;
+import sample.ciphering.encodedFileHeader.EncodedFileHeader;
 import sample.model.ManagersData.DataConverter;
 import sample.model.ManagersData.EncodingData;
-import sample.model.User;
-import sample.persistence.UsersLoader;
-import sun.security.rsa.RSAPublicKeyImpl;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,29 +43,12 @@ public class EncodeManager extends Manager {
         fileHeader.setMode(managerData.getMode());
         fileHeader.setInitialVector(managerData.getInitialVector());
 
-        UsersLoader usersLoader = new UsersLoader();
-
-        Map<String, User> usersMap = usersLoader.loadUsersMap();
-
-        Map<String, String> allowedUsersKeys = encodingData.getAllowedUsers();
-
-        Map<String, String> usersEncodedKeys = new HashMap<>();
-
-        try {
-            for(String login : allowedUsersKeys.keySet()){
-                byte[] userPublicKey = usersMap.get(login).getPublicRsaKey();
-                Cipher cipher = Cipher.getInstance("RSA");
-                PublicKey publicRSA = new RSAPublicKeyImpl(userPublicKey);
-                cipher.init(Cipher.ENCRYPT_MODE, publicRSA);
-                String encodedByte64SessionKey = Base64.encode(cipher.doFinal(managerData.getSessionKey()));
-                usersEncodedKeys.put(login, encodedByte64SessionKey);
-            }
-        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
-            e.printStackTrace();
+        Map<String, String> usersWithBase64SessionKeys = new HashMap<>();
+        for(Map.Entry<String, byte[]> userKey : encodingData.getAllowedUsersWithSessionKeys().entrySet()){
+            usersWithBase64SessionKeys.put(userKey.getKey(), Base64.encode(userKey.getValue()));
         }
 
-
-        fileHeader.setUsersKeys(usersEncodedKeys);
+        fileHeader.setUsersKeys(usersWithBase64SessionKeys);
         fileHeader.setExtension(getFileExtension(managerData.getSourcePath().toFile()));
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -91,11 +64,6 @@ public class EncodeManager extends Manager {
             throw new CannotSaveUsersException(e.getMessage());
         }
 
-//        try {
-//            Files.write(path, data, StandardOpenOption.APPEND);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private static int getLineCount(String text){

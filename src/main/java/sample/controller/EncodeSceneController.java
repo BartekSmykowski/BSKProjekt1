@@ -1,15 +1,14 @@
 package sample.controller;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import sample.Settings;
 import sample.ciphering.cipherManagers.EncodeManager;
+import sample.ciphering.key.generation.InitialVectorGenerator;
+import sample.ciphering.key.generation.SessionKeyGenerator;
 import sample.model.EncodingModes;
 import sample.model.ManagersData.EncodingData;
 import sample.model.User;
@@ -17,10 +16,18 @@ import sample.persistence.UsersLoader;
 import sample.scenesManage.ScenesManager;
 import sample.scenesManage.ScenesNames;
 
-import java.awt.*;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
-import java.util.List;
 
 public class EncodeSceneController {
     public TextField newFileNameTextField;
@@ -112,11 +119,25 @@ public class EncodeSceneController {
         encodingData.setSessionKey(sessionKey);
         encodingData.setInitialVector(generateInitialVector());
 
-        Map<String, String> selectedUsers = new HashMap<>();
-        for(User user : getSelectedUsers()){
-            selectedUsers.put(user.getLogin(), Base64.encode(sessionKey));
+        Map<String, byte[]> selectedUsersWithKeys = new HashMap<>();
+        try {
+            for(User user : getSelectedUsers()){
+                byte[] userPublicKey = usersMap.get(user.getLogin()).getPublicRsaKey();
+                Cipher cipher = Cipher.getInstance("AES");
+
+
+                KeyFactory kf = KeyFactory.getInstance("AES"); // or "EC" or whatever
+                PublicKey publicRSA = kf.generatePublic(new X509EncodedKeySpec(userPublicKey));
+
+                cipher.init(Cipher.ENCRYPT_MODE, publicRSA);
+                byte[] encodedSessionKey = cipher.doFinal(sessionKey);
+                selectedUsersWithKeys.put(user.getLogin(), encodedSessionKey);
+            }
+        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException e) {
+            e.printStackTrace();
         }
-        encodingData.setAllowedUsers(selectedUsers);
+
+        encodingData.setAllowedUsersWithSessionKeys(selectedUsersWithKeys);
         if(encodingData.isValid()){
             ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new ProgressScene(new EncodeManager(encodingData)));
         } else {
@@ -125,21 +146,13 @@ public class EncodeSceneController {
     }
 
     private byte[] generateInitialVector() {
-        return generateRandomBytes(Settings.INITIAL_VECTOR_SIZE);
+        InitialVectorGenerator initialVectorGenerator = new InitialVectorGenerator(Settings.INITIAL_VECTOR_SIZE);
+        return initialVectorGenerator.generate();
     }
 
     private byte[] generateSessionKey() {
-        return generateRandomBytes(Settings.SESSION_KEY_SIZE);
-    }
-
-    private byte[] generateRandomBytes(int size){
-        byte[] bytes = new byte[size];
-        long seed = System.currentTimeMillis();
-        Point point = MouseInfo.getPointerInfo().getLocation();
-        seed *= point.x * point.y;
-        Random random = new Random(seed);
-        random.nextBytes(bytes);
-        return bytes;
+        SessionKeyGenerator sessionKeyGenerator = new SessionKeyGenerator(Settings.SESSION_KEY_SIZE);
+        return sessionKeyGenerator.generate();
     }
 
     private List<User> getSelectedUsers(){
