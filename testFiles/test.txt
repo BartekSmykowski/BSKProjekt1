@@ -1,6 +1,6 @@
 {
   "mode" : "CBC",
-  "initialVector" : "tt0QIEITI66pbxDZORRAfg==",
+  "initialVector" : "W5QKnVangw4buSAYQArvFw==",
   "usersKeys" : {
     "qwe" : "qwe"
   },

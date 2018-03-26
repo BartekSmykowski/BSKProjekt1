@@ -7,6 +7,8 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import sample.Settings;
 import sample.ciphering.cipherManagers.EncodeManager;
+import sample.ciphering.cipherers.KeyTypes;
+import sample.ciphering.cipherers.RSACipherer;
 import sample.ciphering.key.generation.InitialVectorGenerator;
 import sample.ciphering.key.generation.SessionKeyGenerator;
 import sample.model.EncodingModes;
@@ -16,17 +18,7 @@ import sample.persistence.UsersLoader;
 import sample.scenesManage.ScenesManager;
 import sample.scenesManage.ScenesNames;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.File;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
 public class EncodeSceneController {
@@ -71,8 +63,8 @@ public class EncodeSceneController {
         encodingModeChoiceBox.getSelectionModel().selectFirst();
 
         //test
-        encodingData.setSaveDirectory(new File(Settings.TEST_ENCODED_FILE_DIRECTORY));
-        encodingData.setSelectedFile(new File(Settings.TEST_ORIGINAL_FILE));
+        encodingData.setSaveDirectory(Settings.TEST_ENCODED_FILE_DIRECTORY);
+        encodingData.setSelectedFile(Settings.TEST_ORIGINAL_FILE);
         newFileNameTextField.setText("encoded");
 
     }
@@ -85,8 +77,8 @@ public class EncodeSceneController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Wybierz plik do szyfrowania.");
         File selectedFile = fileChooser.showOpenDialog(ScenesManager.getStage());
-        encodingData.setSelectedFile(selectedFile);
         if (selectedFile != null) {
+            encodingData.setSelectedFile(selectedFile.getAbsolutePath());
             chosenFileLabel.setText(selectedFile.getName());
             double fileSizeMb = (double)selectedFile.length() / 1000000;
             fileSizeLabel.setText(String.format("%.2f", fileSizeMb));
@@ -107,8 +99,8 @@ public class EncodeSceneController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Wybierz folder zapisu.");
         File saveDirectory = directoryChooser.showDialog(ScenesManager.getStage());
-        encodingData.setSaveDirectory(saveDirectory);
         if (saveDirectory != null) {
+            encodingData.setSaveDirectory(saveDirectory.getAbsolutePath());
             saveDirectoryLabel.setText(saveDirectory.getAbsolutePath());
         }
     }
@@ -120,21 +112,13 @@ public class EncodeSceneController {
         encodingData.setInitialVector(generateInitialVector());
 
         Map<String, byte[]> selectedUsersWithKeys = new HashMap<>();
-        try {
-            for(User user : getSelectedUsers()){
-                byte[] userPublicKey = usersMap.get(user.getLogin()).getPublicRsaKey();
-                Cipher cipher = Cipher.getInstance("AES");
+        for(User user : getSelectedUsers()){
+            byte[] userPublicKey = usersMap.get(user.getLogin()).getPublicRsaKey();
 
+            RSACipherer cipherer = new RSACipherer(KeyTypes.PUBLIC, userPublicKey);
 
-                KeyFactory kf = KeyFactory.getInstance("AES"); // or "EC" or whatever
-                PublicKey publicRSA = kf.generatePublic(new X509EncodedKeySpec(userPublicKey));
-
-                cipher.init(Cipher.ENCRYPT_MODE, publicRSA);
-                byte[] encodedSessionKey = cipher.doFinal(sessionKey);
-                selectedUsersWithKeys.put(user.getLogin(), encodedSessionKey);
-            }
-        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException e) {
-            e.printStackTrace();
+            byte[] encodedSessionKey = cipherer.encode(sessionKey);
+            selectedUsersWithKeys.put(user.getLogin(), encodedSessionKey);
         }
 
         encodingData.setAllowedUsersWithSessionKeys(selectedUsersWithKeys);

@@ -1,52 +1,70 @@
 package sample.ciphering.cipherManagers;
 
+import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
+import sample.ciphering.cipherers.AES.AESCipherer;
+import sample.ciphering.cipherers.AES.AESCiphererFactory;
+import sample.ciphering.cipherers.AES.ECBAESCipherer;
+import sample.ciphering.cipherers.KeyTypes;
+import sample.ciphering.cipherers.RSACipherer;
+import sample.ciphering.encodedFileHeader.EncodedFileHeader;
+import sample.ciphering.encodedFileHeader.FileHeaderReader;
+import sample.ciphering.hashing.SHA256Hasher;
+import sample.ciphering.jobs.CipherJobExecutor;
+import sample.ciphering.jobs.CiphererJob;
+import sample.ciphering.jobs.JobFactory;
 import sample.model.CipherModes;
-import sample.model.ManagersData.DataConverter;
 import sample.model.ManagersData.DecodingData;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
+public class DecodeManager implements CipherManager {
 
-public class DecodeManager extends Manager {
+    private CipherJobExecutor jobExecutor;
 
     public DecodeManager(DecodingData decodingData) {
-        super(DataConverter.fromDecodingToManager(decodingData), CipherModes.DECRYPT);
+        FileHeaderReader headerReader = new FileHeaderReader(decodingData.getSelectedFilePath());
+        EncodedFileHeader fileHeader = headerReader.readHeader();
+
+        byte[] sessionKey = getSessionKey(decodingData, fileHeader);
+
+        AESCipherer cipherer = AESCiphererFactory.produce(fileHeader.getMode(), sessionKey, fileHeader.getInitialVector());
+
+        String sourceFilePath = decodingData.getSelectedFilePath();
+        String destinationFilePath = decodingData.getDestinationFilePath() + "." + fileHeader.getExtension();
+
+        CiphererJob job = JobFactory.produce(cipherer, sourceFilePath, destinationFilePath, CipherModes.DECODE);
+
+        jobExecutor = new CipherJobExecutor(job);
     }
 
-    @Override
-    protected byte[] loadFileData(Path path) {
-        byte[] data = new byte[0];
-        try(BufferedReader bufferedReader = new BufferedReader(
-                                                new InputStreamReader(
-                                                    new FileInputStream(path.toFile())))){
-            String lineWithJsonSize = bufferedReader.readLine();
-            int numberOfJsonLines = Integer.parseInt(lineWithJsonSize);
-            for(int i = 0; i < numberOfJsonLines; i++){
-                bufferedReader.readLine();
-            }
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-            data = Base64.decode(stringBuilder.toString());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return data;
-    }
-
-    @Override
-    protected void saveDataToFile(byte[] data, Path path) {
+    private byte[] getSessionKey(DecodingData decodingData, EncodedFileHeader fileHeader) {
+        byte[] sessionKey = null;
         try {
-            Files.write(path, data);
-        } catch (IOException e) {
+            String sessionKeyBase64 = fileHeader.getUsersKeys().get(decodingData.getSelectedUser().getLogin());
+
+            String password = decodingData.getPassword();
+            byte[] sessionKeyEncoded = Base64.decode(sessionKeyBase64);
+
+            byte[] hashedPassword = new SHA256Hasher().hash(password.getBytes());
+
+            AESCipherer cipherer = new ECBAESCipherer(hashedPassword);
+            byte[] decodedPrivateKey = cipherer.decode(decodingData.getSelectedUser().getEncodedPrivateRsaKey());
+
+            RSACipherer rsaCipherer = new RSACipherer(KeyTypes.PRIVATE, decodedPrivateKey);
+
+            sessionKey = rsaCipherer.decode(sessionKeyEncoded);
+        }catch (Base64DecodingException e) {
             e.printStackTrace();
         }
+        return sessionKey;
+    }
+
+    @Override
+    public void performJob(){
+        jobExecutor.execute();
+    }
+
+    @Override
+    public CipherJobExecutor getJobExecutor() {
+        return jobExecutor;
     }
 }

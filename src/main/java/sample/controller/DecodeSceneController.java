@@ -41,8 +41,8 @@ public class DecodeSceneController {
 
         //test
         usersChoiceBox.getSelectionModel().selectFirst();
-        decodingData.setSaveDirectory(new File(Settings.TEST_DECODED_FILE_SAVE_DIRECTORY));
-        decodingData.setSelectedFile(new File(Settings.TEST_ENCODED_FILE_DIRECTORY + "/" + Settings.TEST_ENCODED_FILE_NAME));
+        decodingData.setSaveDirectoryPath(Settings.TEST_DECODED_FILE_SAVE_DIRECTORY);
+        decodingData.setSelectedFilePath(Settings.TEST_ENCODED_FILE_DIRECTORY + "/" + Settings.TEST_ENCODED_FILE_NAME);
         newFileName.setText(Settings.TEST_DECODED_FILE_NAME);
         passwordTextField.setText("qwe");
     }
@@ -72,8 +72,8 @@ public class DecodeSceneController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Wybierz plik do szyfrowania.");
         File selectedFile = fileChooser.showOpenDialog(ScenesManager.getStage());
-        decodingData.setSelectedFile(selectedFile);
         if (selectedFile != null) {
+            decodingData.setSelectedFilePath(selectedFile.getAbsolutePath());
             chosenFileLabel.setText(selectedFile.getName());
             double fileSizeMb = (double)selectedFile.length() / 1000000;
             fileSizeLabel.setText(String.format("%.2f", fileSizeMb));
@@ -94,8 +94,8 @@ public class DecodeSceneController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Wybierz folder zapisu.");
         File saveDirectory = directoryChooser.showDialog(ScenesManager.getStage());
-        decodingData.setSaveDirectory(saveDirectory);
         if (saveDirectory != null) {
+            decodingData.setSaveDirectoryPath(saveDirectory.getAbsolutePath());
             saveDirectoryLabel.setText(saveDirectory.getAbsolutePath());
         }
     }

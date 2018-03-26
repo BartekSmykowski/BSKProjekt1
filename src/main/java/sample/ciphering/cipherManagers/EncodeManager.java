@@ -1,82 +1,56 @@
 package sample.ciphering.cipherManagers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
-import sample.exception.CannotSaveUsersException;
-import sample.model.CipherModes;
+import sample.ciphering.cipherers.AES.AESCipherer;
+import sample.ciphering.cipherers.AES.AESCiphererFactory;
 import sample.ciphering.encodedFileHeader.EncodedFileHeader;
-import sample.model.ManagersData.DataConverter;
+import sample.ciphering.encodedFileHeader.FileHeaderWriter;
+import sample.ciphering.jobs.CipherJobExecutor;
+import sample.ciphering.jobs.CiphererJob;
+import sample.ciphering.jobs.JobFactory;
+import sample.model.CipherModes;
+import sample.model.EncodingModes;
 import sample.model.ManagersData.EncodingData;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+public class EncodeManager implements CipherManager {
 
-public class EncodeManager extends Manager {
+    private CipherJobExecutor jobExecutor;
     private EncodingData encodingData;
+    private String destinationFilePath;
 
     public EncodeManager(EncodingData encodingData){
-        super(DataConverter.fromEncodeToManager(encodingData), CipherModes.ENCRYPT);
         this.encodingData = encodingData;
+        CiphererJob job = createCiphererJob(encodingData);
+
+        jobExecutor = new CipherJobExecutor(job);
+
+    }
+
+    private CiphererJob createCiphererJob(EncodingData encodingData) {
+        AESCipherer cipherer = createCipherer(encodingData);
+        String sourceFilePath = encodingData.getSelectedFile();
+        destinationFilePath = encodingData.getDestinationFilePath();
+
+        return JobFactory.produce(cipherer, sourceFilePath, destinationFilePath, CipherModes.ENCODE);
+    }
+
+    private AESCipherer createCipherer(EncodingData encodingData) {
+        EncodingModes mode = encodingData.getEncodingMode();
+        byte[] sessionKey = encodingData.getSessionKey();
+        byte[] initialVector = encodingData.getInitialVector();
+        return AESCiphererFactory.produce(mode, sessionKey, initialVector);
     }
 
     @Override
-    protected byte[] loadFileData(Path path) {
-        byte[] data = new byte[0];
-        try {
-            data = Files.readAllBytes(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return data;
+    public void performJob(){
+        EncodedFileHeader fileHeader = new EncodedFileHeader(encodingData);
+        FileHeaderWriter headerWriter = new FileHeaderWriter(destinationFilePath);
+        headerWriter.write(fileHeader);
+        jobExecutor.execute();
     }
 
     @Override
-    protected void saveDataToFile(byte[] data, Path path) {
-        EncodedFileHeader fileHeader = new EncodedFileHeader();
-        fileHeader.setMode(managerData.getMode());
-        fileHeader.setInitialVector(managerData.getInitialVector());
-
-        Map<String, String> usersWithBase64SessionKeys = new HashMap<>();
-        for(Map.Entry<String, byte[]> userKey : encodingData.getAllowedUsersWithSessionKeys().entrySet()){
-            usersWithBase64SessionKeys.put(userKey.getKey(), Base64.encode(userKey.getValue()));
-        }
-
-        fileHeader.setUsersKeys(usersWithBase64SessionKeys);
-        fileHeader.setExtension(getFileExtension(managerData.getSourcePath().toFile()));
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try(PrintWriter writer = new PrintWriter(path.toFile()))
-        {
-            String headerJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(fileHeader);
-            writer.println(getLineCount(headerJson));
-            writer.print(headerJson);
-            writer.println();
-            writer.print(Base64.encode(data));
-        } catch (FileNotFoundException | JsonProcessingException e) {
-            throw new CannotSaveUsersException(e.getMessage());
-        }
-
-    }
-
-    private static int getLineCount(String text){
-        return text.split("[\n]").length;
-    }
-
-    private String getFileExtension(File file) {
-        String name = file.getName();
-        try {
-            return name.substring(name.lastIndexOf(".") + 1);
-        } catch (Exception e) {
-            return "";
-        }
+    public CipherJobExecutor getJobExecutor() {
+        return jobExecutor;
     }
 
 }

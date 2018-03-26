@@ -2,14 +2,15 @@ package sample.ciphering.jobs;
 
 import sample.ciphering.cipherers.AES.AESCipherer;
 
-public class DecodeJob extends Job {
+public class DecodeJob extends CiphererJob {
 
-    public DecodeJob(AESCipherer cipherer, byte[] data){
-        super(cipherer, data);
+    public DecodeJob(AESCipherer cipherer, String sourceFile, String destinationFile) {
+        super(cipherer, sourceFile, destinationFile);
+        appendToOutput = false;
     }
 
     @Override
-    protected byte[] perform() {
-        return cipherer.decode(data);
+    protected byte[] perform(byte[] dataBlock) {
+        return cipherer.decode(dataBlock);
     }
 }
