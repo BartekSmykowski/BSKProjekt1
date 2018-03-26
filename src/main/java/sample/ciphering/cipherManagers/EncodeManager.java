@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import sample.exception.CannotSaveUsersException;
 import sample.model.CipherModes;
-import sample.model.EncodedFileHeader;
+import sample.ciphering.encodedFileHeader.EncodedFileHeader;
 import sample.model.ManagersData.DataConverter;
 import sample.model.ManagersData.EncodingData;
 
@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EncodeManager extends Manager {
     private EncodingData encodingData;
@@ -41,7 +43,12 @@ public class EncodeManager extends Manager {
         fileHeader.setMode(managerData.getMode());
         fileHeader.setInitialVector(managerData.getInitialVector());
 
-        fileHeader.setUsersKeys(encodingData.getAllowedUsers());
+        Map<String, String> usersWithBase64SessionKeys = new HashMap<>();
+        for(Map.Entry<String, byte[]> userKey : encodingData.getAllowedUsersWithSessionKeys().entrySet()){
+            usersWithBase64SessionKeys.put(userKey.getKey(), Base64.encode(userKey.getValue()));
+        }
+
+        fileHeader.setUsersKeys(usersWithBase64SessionKeys);
         fileHeader.setExtension(getFileExtension(managerData.getSourcePath().toFile()));
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -57,11 +64,6 @@ public class EncodeManager extends Manager {
             throw new CannotSaveUsersException(e.getMessage());
         }
 
-//        try {
-//            Files.write(path, data, StandardOpenOption.APPEND);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private static int getLineCount(String text){

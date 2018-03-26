@@ -2,8 +2,8 @@ package sample.ciphering.cipherManagers;
 
 import javafx.beans.property.DoubleProperty;
 import sample.ciphering.CipherJobExecutor;
-import sample.ciphering.cipherers.Cipherer;
-import sample.ciphering.cipherers.EncoderFactory;
+import sample.ciphering.cipherers.AES.AESCipherer;
+import sample.ciphering.cipherers.AES.AESCiphererFactory;
 import sample.ciphering.jobs.Job;
 import sample.ciphering.jobs.JobFactory;
 import sample.model.CipherModes;
@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
 
 public abstract class Manager {
 
-    private Cipherer cipherer;
+    private AESCipherer cipherer;
     private Path sourceFilePath;
     private Path destinationFilePath;
     private CipherJobExecutor jobExecutor;
@@ -23,7 +23,7 @@ public abstract class Manager {
 
     public Manager(ManagerData managerData, CipherModes cipherMode){
         this.managerData = managerData;
-        cipherer = EncoderFactory.produce(managerData.getMode(), managerData.getSessionKey(), managerData.getInitialVector());
+        cipherer = AESCiphererFactory.produce(managerData.getMode(), managerData.getSessionKey(), managerData.getInitialVector());
 
         sourceFilePath = managerData.getSourcePath();
         destinationFilePath = managerData.getDestinationPath();

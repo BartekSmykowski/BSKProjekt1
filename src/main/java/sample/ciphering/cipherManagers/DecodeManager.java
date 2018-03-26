@@ -30,11 +30,11 @@ public class DecodeManager extends Manager {
                 bufferedReader.readLine();
             }
             String line;
-            //StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             while ((line = bufferedReader.readLine()) != null) {
-                data = Base64.decode(line);
+                stringBuilder.append(line);
             }
-            //data = stringBuilder.toString().getBytes();
+            data = Base64.decode(stringBuilder.toString());
         }catch (Exception e){
             e.printStackTrace();
         }

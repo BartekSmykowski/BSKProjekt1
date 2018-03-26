@@ -1,0 +1,8 @@
+{
+  "mode" : "CBC",
+  "initialVector" : "tt0QIEITI66pbxDZORRAfg==",
+  "usersKeys" : {
+    "qwe" : "qwe"
+  },
+  "extension" : "asd"
+}

@@ -1,10 +1,10 @@
 package sample.ciphering.jobs;
 
-import sample.ciphering.cipherers.Cipherer;
+import sample.ciphering.cipherers.AES.AESCipherer;
 
 public class DecodeJob extends Job {
 
-    public DecodeJob(Cipherer cipherer, byte[] data){
+    public DecodeJob(AESCipherer cipherer, byte[] data){
         super(cipherer, data);
     }
 

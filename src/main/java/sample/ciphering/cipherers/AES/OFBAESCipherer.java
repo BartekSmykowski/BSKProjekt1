@@ -1,14 +1,14 @@
-package sample.ciphering.cipherers;
+package sample.ciphering.cipherers.AES;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 
-public class CBCCipherer extends Cipherer {
+public class OFBAESCipherer extends AESCipherer {
     private IvParameterSpec ivParameterSpec;
 
-    public CBCCipherer(byte[] key, byte[] initialVector) {
-        super(key, "AES/CBC/PKCS5Padding");
+    public OFBAESCipherer(byte[] key, byte[] initialVector) {
+        super(key, "AES/OFB/NoPadding");
         ivParameterSpec = new IvParameterSpec(initialVector);
     }
 
@@ -20,5 +20,4 @@ public class CBCCipherer extends Cipherer {
             e.printStackTrace();
         }
     }
-
 }

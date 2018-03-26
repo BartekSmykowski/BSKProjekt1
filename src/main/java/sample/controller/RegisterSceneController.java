@@ -1,25 +1,22 @@
 package sample.controller;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.security.KeyPair;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collection;
-
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import sample.Settings;
-import sample.ciphering.cipherers.Cipherer;
-import sample.ciphering.cipherers.ECBCipherer;
+import sample.ciphering.cipherers.AES.AESCipherer;
+import sample.ciphering.cipherers.AES.ECBAESCipherer;
 import sample.ciphering.hashing.SHA256Hasher;
-import sample.exception.CannotRegisterUserException;
 import sample.ciphering.key.generation.RsaKeyGenerator;
 import sample.model.User;
 import sample.persistence.UsersLoader;
 import sample.persistence.UsersSaver;
 import sample.scenesManage.ScenesManager;
 import sample.scenesManage.ScenesNames;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.security.KeyPair;
+import java.util.Collection;
 
 public class RegisterSceneController {
 	public TextField loginTextField;
@@ -67,7 +64,7 @@ public class RegisterSceneController {
 		String password = passwordField.getText();
 		byte[] hashedPasswordBytes = new SHA256Hasher().hash(password.getBytes());
 
-		Cipherer cipherer = new ECBCipherer(hashedPasswordBytes);
+		AESCipherer cipherer = new ECBAESCipherer(hashedPasswordBytes);
 		byte[] encodedPrivateKey = cipherer.encode(privateKey);
 
 		return new User(loginTextField.getText(), encodedPrivateKey, publicKey);
