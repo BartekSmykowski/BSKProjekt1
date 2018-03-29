@@ -104,7 +104,7 @@ public class DecodeSceneController {
         decodingData.setSaveFileName(newFileName.getText());
         decodingData.setPassword(passwordTextField.getText());
         if(decodingData.isValid()){
-            ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new ProgressScene(new DecodeManager(decodingData)));
+            ScenesManager.setScene(ScenesNames.PROGRESS, new ProgressScene(new DecodeManager(decodingData)));
         } else {
             errorLabel.setText("Złe dane.");
         }

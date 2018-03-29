@@ -113,7 +113,7 @@ public class EncodeSceneController {
         encodingData.setAllowedUsers(getSelectedUsers());
 
         if(encodingData.isValid()){
-            ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new ProgressScene(new EncodeManager(encodingData)));
+            ScenesManager.setScene(ScenesNames.PROGRESS, new ProgressScene(new EncodeManager(encodingData)));
         } else {
             errorLabel.setText("Złe dane.");
         }
