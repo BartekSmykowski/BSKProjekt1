@@ -19,13 +19,14 @@ class EncodedFileHeaderTest {
         encodedFileHeader.setMode(EncodingModes.CBC);
         InitialVectorGenerator initialVectorGenerator = new InitialVectorGenerator(Settings.INITIAL_VECTOR_SIZE);
         encodedFileHeader.setInitialVector(initialVectorGenerator.generate());
-        Map<String, String> usersKeys = new HashMap<>();
-        usersKeys.put("qwe", "qwe");
+        Map<String, byte[]> usersKeys = new HashMap<>();
+        byte[] sessionKey = new byte[] {1,2,3,4,5};
+        usersKeys.put("qwe", sessionKey);
         encodedFileHeader.setUsersKeys(usersKeys);
 
         EncodedFileHeaderMeasurer measurer = new EncodedFileHeaderMeasurer(encodedFileHeader);
 
-        int expectedSize = 139;
+        int expectedSize = 144;
 
         int size = measurer.getJsonByteSize();
 

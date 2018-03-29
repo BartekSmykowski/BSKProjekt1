@@ -6,7 +6,8 @@ public class Settings {
 	public static final int RSA_KEY_SIZE = 2048;
 	public static final int SESSION_KEY_SIZE = 32;
 	public static final int INITIAL_VECTOR_SIZE = 16;
-	public static final int DATA_PACKET_SIZE = 16;
+	public static final int DATA_PACKET_SIZE = 128;
+	public static final int OUT_PACKET_SIZE = (DATA_PACKET_SIZE/16 + 1)*16;
 
 
 	public static final String TEST_ORIGINAL_FILE = "testFiles/testOriginal.txt";

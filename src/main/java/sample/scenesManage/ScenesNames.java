@@ -13,7 +13,7 @@ public enum ScenesNames {
         } else if(name.equals(REGISTER)){
             return "registerScene.fxml";
         } else if(name.equals(ENCODING_PROGRESS)){
-            return "encodingProgressScene.fxml";
+            return "progressScene.fxml";
         }
 
         throw new NoSuchSceneException(name);

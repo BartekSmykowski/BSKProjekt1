@@ -8,7 +8,7 @@ public class OFBAESCipherer extends AESCipherer {
     private IvParameterSpec ivParameterSpec;
 
     public OFBAESCipherer(byte[] key, byte[] initialVector) {
-        super(key, "AES/OFB/NoPadding");
+        super(key, "AES/OFB/PKCS5Padding");
         ivParameterSpec = new IvParameterSpec(initialVector);
     }
 

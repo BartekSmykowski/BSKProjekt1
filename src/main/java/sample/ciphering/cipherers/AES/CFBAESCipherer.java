@@ -8,7 +8,7 @@ public class CFBAESCipherer extends AESCipherer {
     private IvParameterSpec ivParameterSpec;
 
     public CFBAESCipherer(byte[] key, byte[] initialVector) {
-        super(key, "AES/CFB/NoPadding");
+        super(key, "AES/CFB/PKCS5Padding");
         ivParameterSpec = new IvParameterSpec(initialVector);
     }
 

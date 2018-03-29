@@ -11,6 +11,9 @@ public class ProgressScene {
 
     public ProgressBar encodingProgressBar;
     public Button menuButton;
+//    public Label sourceFilePath;
+//    public Label destinationFilePath;
+//    public Label fileSize;
 
     private CipherManager manager;
 
@@ -20,6 +23,10 @@ public class ProgressScene {
 
     public void initialize(){
         menuButton.setVisible(false);
+
+//        sourceFilePath.setText(manager.getSourcePath());
+//        destinationFilePath.setText(manager.getDestinationPath());
+//        fileSize.setText(String.valueOf(manager.getFileSize()));
 
         DoubleProperty progressProperty = encodingProgressBar.progressProperty();
         progressProperty.bind(manager.getJobExecutor().progressProperty());

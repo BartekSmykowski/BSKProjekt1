@@ -19,8 +19,10 @@ class FileHeaderWriterReaderTest {
         encodedFileHeader.setMode(EncodingModes.CBC);
         InitialVectorGenerator initialVectorGenerator = new InitialVectorGenerator(Settings.INITIAL_VECTOR_SIZE);
         encodedFileHeader.setInitialVector(initialVectorGenerator.generate());
-        Map<String, String> usersKeys = new HashMap<>();
-        usersKeys.put("qwe", "qwe");
+        Map<String, byte[]> usersKeys = new HashMap<>();
+        byte[] sessionKey = new byte[] {1,2,3,4,5};
+        usersKeys.put("qwe", sessionKey);
+        usersKeys.put("asd", sessionKey);
         encodedFileHeader.setUsersKeys(usersKeys);
 
         String path = "testFiles/test.txt";

@@ -7,8 +7,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import sample.Settings;
 import sample.ciphering.cipherManagers.EncodeManager;
-import sample.ciphering.cipherers.KeyTypes;
-import sample.ciphering.cipherers.RSACipherer;
 import sample.ciphering.key.generation.InitialVectorGenerator;
 import sample.ciphering.key.generation.SessionKeyGenerator;
 import sample.model.EncodingModes;
@@ -108,20 +106,12 @@ public class EncodeSceneController {
     public void encode() {
         encodingData.setSaveFileName(newFileNameTextField.getText());
         byte[] sessionKey = generateSessionKey();
+
         encodingData.setSessionKey(sessionKey);
         encodingData.setInitialVector(generateInitialVector());
 
-        Map<String, byte[]> selectedUsersWithKeys = new HashMap<>();
-        for(User user : getSelectedUsers()){
-            byte[] userPublicKey = usersMap.get(user.getLogin()).getPublicRsaKey();
+        encodingData.setAllowedUsers(getSelectedUsers());
 
-            RSACipherer cipherer = new RSACipherer(KeyTypes.PUBLIC, userPublicKey);
-
-            byte[] encodedSessionKey = cipherer.encode(sessionKey);
-            selectedUsersWithKeys.put(user.getLogin(), encodedSessionKey);
-        }
-
-        encodingData.setAllowedUsersWithSessionKeys(selectedUsersWithKeys);
         if(encodingData.isValid()){
             ScenesManager.setScene(ScenesNames.ENCODING_PROGRESS, new ProgressScene(new EncodeManager(encodingData)));
         } else {

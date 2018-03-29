@@ -1,8 +1,9 @@
 {
   "mode" : "CBC",
-  "initialVector" : "W5QKnVangw4buSAYQArvFw==",
+  "initialVector" : "KG/nyuqIAGlHNP/evs4h0g==",
   "usersKeys" : {
-    "qwe" : "qwe"
+    "asd" : "AQIDBAU=",
+    "qwe" : "AQIDBAU="
   },
   "extension" : "asd"
 }

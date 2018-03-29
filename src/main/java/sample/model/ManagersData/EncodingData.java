@@ -2,8 +2,9 @@ package sample.model.ManagersData;
 
 import lombok.Data;
 import sample.model.EncodingModes;
+import sample.model.User;
 
-import java.util.Map;
+import java.util.List;
 
 @Data
 public class EncodingData {
@@ -11,7 +12,7 @@ public class EncodingData {
     private String selectedFile;
     private String saveDirectory;
     private EncodingModes encodingMode;
-    private Map<String, byte[]> allowedUsersWithSessionKeys;
+    private List<User> allowedUsers;
     private byte[] sessionKey;
     private byte[] initialVector;
     private String saveFileName;
@@ -28,7 +29,7 @@ public class EncodingData {
         return selectedFile != null && saveDirectory != null
                 && encodingMode != null && sessionKey != null
                 && saveFileName != null && initialVector != null
-                && allowedUsersWithSessionKeys != null;
+                && allowedUsers != null;
     }
 
 }

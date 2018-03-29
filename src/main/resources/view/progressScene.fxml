@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+
+    <children>
+      <ProgressBar fx:id="encodingProgressBar" layoutX="138.0" layoutY="230.0" prefHeight="18.0" prefWidth="325.0" progress="0.0" />
+      <Button fx:id="menuButton" layoutX="275.0" layoutY="275.0" mnemonicParsing="false" onMouseClicked="#mainMenu" text="Menu" />
+      <Label layoutX="262.0" layoutY="62.0" text="Wybrany plik:" />
+      <Label fx:id="sourceFilePath" layoutX="286.0" layoutY="79.0" text="błąd" />
+      <Label layoutX="269.0" layoutY="107.0" text="Plik zapisu:" />
+      <Label fx:id="destinationFilePath" layoutX="286.0" layoutY="124.0" text="błąd" />
+      <Label layoutX="219.0" layoutY="151.0" text="Rozmiar wybranego pliku[Mb]:" />
+      <Label fx:id="fileSize" layoutX="286.0" layoutY="168.0" text="błąd" />
+      <Label layoutX="279.0" layoutY="200.0" text="Postęp:" />
+    </children>
+
+</AnchorPane>
