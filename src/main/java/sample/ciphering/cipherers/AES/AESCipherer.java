@@ -3,6 +3,7 @@ package sample.ciphering.cipherers.AES;
 import sample.ciphering.cipherers.Cipherer;
 import sample.ciphering.cipherers.KeyTypes;
 import sample.ciphering.cipherers.UtilKeyFactory;
+import sample.ciphering.key.generation.RandomBytesGenerator;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -31,10 +32,12 @@ public abstract class AESCipherer implements Cipherer {
     }
 
     private byte[] tryDoFinal(byte[] data) {
-        byte[] encodedBytes = new byte[0];
+        byte[] encodedBytes;
+        RandomBytesGenerator randomBytesGenerator = new RandomBytesGenerator(data.length);
+        encodedBytes = randomBytesGenerator.generate();
         try {
             encodedBytes = cipher.doFinal(data);
-        } catch (IllegalBlockSizeException | BadPaddingException e) {
+        } catch (IllegalBlockSizeException | BadPaddingException e){
             e.printStackTrace();
         }
         return encodedBytes;

@@ -1,5 +1,6 @@
 package sample.controller;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import sample.Settings;
@@ -17,16 +18,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.security.KeyPair;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterSceneController {
 	public TextField loginTextField;
 	public PasswordField passwordField;
+	public Label registerLabel;
+
 
 	static {
 		tryInitializingCryptographicLibrary();
 	}
 
-	private static void tryInitializingCryptographicLibrary()
+    private static void tryInitializingCryptographicLibrary()
 	{
 		try {
 			setCryptographicLibraryAccessible();
@@ -52,8 +57,25 @@ public class RegisterSceneController {
 	}
 
 	public void register() {
+		registerLabel.setText("Rejestruje");
+		if(isLoginUsed(loginTextField.getText())){
+			registerLabel.setText("Login zajęty.");
+			return;
+		}
+		if(!isPasswordValid(passwordField.getText())){
+			registerLabel.setText("Złe hasło.");
+			return;
+		}
 		User user = createUserFromInput();
 		saveUser(user);
+		registerLabel.setText("Zarejestrowano");
+	}
+
+	private boolean isPasswordValid(String password) {
+		String passwordRegexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!*@#$%^&+=])(?=\\S+$).{8,}$";
+		Pattern pattern = Pattern.compile(passwordRegexp);
+		Matcher matcher = pattern.matcher(password);
+		return matcher.matches();
 	}
 
 	private User createUserFromInput() {
@@ -67,7 +89,18 @@ public class RegisterSceneController {
 		AESCipherer cipherer = new ECBAESCipherer(hashedPasswordBytes);
 		byte[] encodedPrivateKey = cipherer.encode(privateKey);
 
-		return new User(loginTextField.getText(), encodedPrivateKey, publicKey);
+		String login = loginTextField.getText();
+		return new User(login, encodedPrivateKey, publicKey);
+	}
+
+	private boolean isLoginUsed(String login){
+		Collection<User> users = new UsersLoader().loadUsers();
+		for(User usr : users) {
+			if (usr.getLogin().equals(login)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void saveUser(User user) {

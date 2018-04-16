@@ -47,7 +47,6 @@ public class EncodeManager implements CipherManager {
         EncodedFileHeader fileHeader = new EncodedFileHeader(encodingData);
         FileHeaderWriter headerWriter = new FileHeaderWriter(destinationFilePath);
         headerWriter.write(fileHeader);
-        fileHeader.print();
         jobExecutor.execute();
     }
 
@@ -55,6 +54,7 @@ public class EncodeManager implements CipherManager {
     public CipherJobExecutor getJobExecutor() {
         return jobExecutor;
     }
+
     @Override
     public String getSourcePath() {
         return sourceFilePath;
@@ -66,9 +66,9 @@ public class EncodeManager implements CipherManager {
     }
 
     @Override
-    public int getFileSize() {
+    public float getFileSize() {
         try {
-            return (int) (Files.size(Paths.get(sourceFilePath))/1024);
+            return (Files.size(Paths.get(sourceFilePath))/(float)1024);
         } catch (IOException e) {
             e.printStackTrace();
         }

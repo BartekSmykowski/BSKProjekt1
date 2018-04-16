@@ -29,7 +29,7 @@ public class DecodeJob implements CiphererJob {
     @Override
     public Void call() throws Exception {
         long fileSize = Files.size(Paths.get(sourceFile));
-        long numberOfIterations = fileSize/272;
+        long numberOfIterations = fileSize/Settings.OUT_PACKET_SIZE;
         try(FileInputStream inputStream = new FileInputStream(sourceFile);
             FileOutputStream outputStream = new FileOutputStream(destinationPath)) {
             inputStream.skip(bytesToSkip);
@@ -39,7 +39,7 @@ public class DecodeJob implements CiphererJob {
                 byte[] decodedBlock = decodeBlock(dataBlock);
                 outputStream.write(decodedBlock);
                 i++;
-                progress.setValue(i/numberOfIterations);
+                progress.setValue((float)i/numberOfIterations);
             }
         }
         progress.setValue(1.0);

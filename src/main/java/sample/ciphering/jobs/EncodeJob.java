@@ -7,6 +7,8 @@ import sample.ciphering.cipherers.AES.AESCipherer;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class EncodeJob implements CiphererJob {
 
@@ -23,12 +25,17 @@ public class EncodeJob implements CiphererJob {
 
     @Override
     public Void call() throws Exception {
+        long fileSize = Files.size(Paths.get(sourceFile));
+        long numberOfIterations = fileSize/Settings.DATA_PACKET_SIZE;
         try(FileInputStream inputStream = new FileInputStream(sourceFile);
             FileOutputStream outputStream = new FileOutputStream(destinationPath, true)) {
             byte[] dataBlock = new byte[Settings.DATA_PACKET_SIZE];
+            int i = 1;
             while (inputStream.read(dataBlock) != -1) {
                 byte[] encodedBlock = encodeBlock(dataBlock);
                 outputStream.write(encodedBlock);
+                i++;
+                progress.setValue((float)i/numberOfIterations);
             }
         }
         progress.setValue(1.0);

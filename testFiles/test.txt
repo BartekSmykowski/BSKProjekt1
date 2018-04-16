@@ -1,6 +1,6 @@
 {
   "mode" : "CBC",
-  "initialVector" : "KG/nyuqIAGlHNP/evs4h0g==",
+  "initialVector" : "LJXzq2e0TRddTAeQLSGBNQ==",
   "usersKeys" : {
     "asd" : "AQIDBAU=",
     "qwe" : "AQIDBAU="

@@ -35,11 +35,6 @@ public class ScenesManager {
         setScene(root);
     }
 
-    private static void setScene(Parent root) {
-        Scene scene = new Scene(root, width, height);
-        stage.setScene(scene);
-    }
-
     private static URL getUrl(ScenesNames name) {
         Class<ScenesManager> supportClass = ScenesManager.class;
         String path = "/view/" + ScenesNames.getFileName(name);
@@ -54,6 +49,13 @@ public class ScenesManager {
             e.printStackTrace();
         }
         return root;
+    }
+
+    private static void setScene(Parent root) {
+        Scene scene = new Scene(root, width, height);
+        scene.getStylesheets().add("/view/styles/generalStyles.css");
+
+        stage.setScene(scene);
     }
 
     public static void setStage(Stage setStage) {

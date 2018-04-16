@@ -27,7 +27,6 @@ public class DecodeManager implements CipherManager {
     public DecodeManager(DecodingData decodingData) {
         FileHeaderReader headerReader = new FileHeaderReader(decodingData.getSelectedFilePath());
         EncodedFileHeader fileHeader = headerReader.readHeader();
-        fileHeader.print();
 
         byte[] sessionKey = getSessionKey(decodingData, fileHeader);
 
@@ -53,6 +52,11 @@ public class DecodeManager implements CipherManager {
 
         AESCipherer cipherer = new ECBAESCipherer(hashedPassword);
         byte[] decodedPrivateKey = cipherer.decode(decodingData.getSelectedUser().getEncodedPrivateRsaKey());
+
+//        if(decodedPrivateKey.length == 0){
+//            SessionKeyGenerator sessionKeyGenerator = new SessionKeyGenerator(Settings.SESSION_KEY_SIZE);
+//            return sessionKeyGenerator.generate();
+//        }
 
         RSACipherer rsaCipherer = new RSACipherer(KeyTypes.PRIVATE, decodedPrivateKey);
 
@@ -80,12 +84,13 @@ public class DecodeManager implements CipherManager {
     }
 
     @Override
-    public int getFileSize() {
+    public float getFileSize() {
         try {
-            return (int) (Files.size(Paths.get(sourceFilePath))/1024);
+            return (Files.size(Paths.get(sourceFilePath))/(float)1024);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return -1;
     }
+
 }

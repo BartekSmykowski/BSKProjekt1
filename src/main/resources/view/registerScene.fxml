@@ -25,6 +25,7 @@
                </children>
             </HBox>
             <Button mnemonicParsing="false" onMouseClicked="#register" text="Rejestruj" />
+            <Label fx:id="registerLabel" />
             <Button mnemonicParsing="false" onMouseClicked="#mainMenu" text="Menu główne" />
          </children>
       </VBox>

@@ -7,5 +7,5 @@ public interface CipherManager {
     CipherJobExecutor getJobExecutor();
     String getSourcePath();
     String getDestinationPath();
-    int getFileSize();
+    float getFileSize();
 }

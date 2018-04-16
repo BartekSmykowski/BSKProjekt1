@@ -1,13 +1,13 @@
 package sample.persistence;
 
-import static com.google.common.truth.Truth.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import sample.model.User;
 
 import java.util.Collection;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import sample.model.User;
+import static com.google.common.truth.Truth.assertThat;
 
 class UsersLoaderTest {
 	private UsersLoader usersLoader;
@@ -16,7 +16,8 @@ class UsersLoaderTest {
 	void createUsersLoader() {
 		this.usersLoader = new UsersLoader();
 	}
-	
+
+	@Disabled
 	@Test
 	void shouldLoadTwoUsers() {
 		Collection<User> users = usersLoader.loadUsers();
