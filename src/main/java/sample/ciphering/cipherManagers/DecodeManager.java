@@ -12,6 +12,7 @@ import sample.ciphering.hashing.SHA256Hasher;
 import sample.ciphering.jobs.CipherJobExecutor;
 import sample.ciphering.jobs.CiphererJob;
 import sample.ciphering.jobs.DecodeJob;
+import sample.ciphering.jobs.MockJob;
 import sample.model.ManagersData.DecodingData;
 
 import java.io.IOException;
@@ -30,15 +31,19 @@ public class DecodeManager implements CipherManager {
 
         byte[] sessionKey = getSessionKey(decodingData, fileHeader);
 
-        AESCipherer cipherer = AESCiphererFactory.produce(fileHeader.getMode(), sessionKey, fileHeader.getInitialVector());
-
         sourceFilePath = decodingData.getSelectedFilePath();
         destinationFilePath = decodingData.getDestinationFilePath() + "." + fileHeader.getExtension();
 
         EncodedFileHeaderMeasurer measurer = new EncodedFileHeaderMeasurer(fileHeader);
         long headerBytesSize = measurer.getJsonByteSize();
 
-        CiphererJob job = new DecodeJob(cipherer, sourceFilePath, destinationFilePath, headerBytesSize);
+        CiphererJob job;
+        if(sessionKey.length == 0){
+            job = new MockJob(sourceFilePath, destinationFilePath, headerBytesSize);
+        } else{
+            AESCipherer cipherer = AESCiphererFactory.produce(fileHeader.getMode(), sessionKey, fileHeader.getInitialVector());
+            job = new DecodeJob(cipherer, sourceFilePath, destinationFilePath, headerBytesSize);
+        }
 
         jobExecutor = new CipherJobExecutor(job);
     }
@@ -52,11 +57,6 @@ public class DecodeManager implements CipherManager {
 
         AESCipherer cipherer = new ECBAESCipherer(hashedPassword);
         byte[] decodedPrivateKey = cipherer.decode(decodingData.getSelectedUser().getEncodedPrivateRsaKey());
-
-//        if(decodedPrivateKey.length == 0){
-//            SessionKeyGenerator sessionKeyGenerator = new SessionKeyGenerator(Settings.SESSION_KEY_SIZE);
-//            return sessionKeyGenerator.generate();
-//        }
 
         RSACipherer rsaCipherer = new RSACipherer(KeyTypes.PRIVATE, decodedPrivateKey);
 

@@ -3,33 +3,36 @@ package sample.ciphering.jobs;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import sample.Settings;
-import sample.ciphering.cipherers.AES.AESCipherer;
+import sample.ciphering.key.generation.RandomBytesGenerator;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class DecodeJob implements CiphererJob {
+public class MockJob implements CiphererJob {
 
     private DoubleProperty progress = new SimpleDoubleProperty();
-    protected AESCipherer cipherer;
     private String sourceFile;
     private String destinationPath;
 
     private long bytesToSkip;
 
-    public DecodeJob(AESCipherer cipherer, String sourceFile, String destinationFile, long headerBytesToSkip) {
-        this.cipherer = cipherer;
+    public MockJob(String sourceFile, String destinationFile, long headerBytesToSkip){
         this.sourceFile = sourceFile;
         this.destinationPath = destinationFile;
         this.bytesToSkip = headerBytesToSkip;
     }
 
     @Override
+    public DoubleProperty progressProperty() {
+        return progress;
+    }
+
+    @Override
     public Void call() throws Exception {
         long fileSize = Files.size(Paths.get(sourceFile));
-        long numberOfIterations = fileSize/Settings.OUT_PACKET_SIZE;
+        long numberOfIterations = fileSize/ Settings.OUT_PACKET_SIZE;
         try(FileInputStream inputStream = new FileInputStream(sourceFile);
             FileOutputStream outputStream = new FileOutputStream(destinationPath)) {
             inputStream.skip(bytesToSkip);
@@ -37,7 +40,8 @@ public class DecodeJob implements CiphererJob {
             int i = 1;
             while (inputStream.read(dataBlock) != -1) {
                 byte[] decodedBlock;
-                decodedBlock = decodeBlock(dataBlock);
+                RandomBytesGenerator randomBytesGenerator = new RandomBytesGenerator(Settings.OUT_PACKET_SIZE);
+                decodedBlock = randomBytesGenerator.generate();
                 outputStream.write(decodedBlock);
                 i++;
                 progress.setValue((float)i/numberOfIterations);
@@ -45,14 +49,5 @@ public class DecodeJob implements CiphererJob {
         }
         progress.setValue(1.0);
         return null;
-    }
-
-    private byte[] decodeBlock(byte[] dataBlock) {
-        return cipherer.decode(dataBlock);
-    }
-
-    @Override
-    public DoubleProperty progressProperty() {
-        return progress;
     }
 }

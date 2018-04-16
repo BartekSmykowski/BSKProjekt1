@@ -1,7 +1,5 @@
 package sample.ciphering.cipherers;
 
-import sample.ciphering.key.generation.RandomBytesGenerator;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -39,9 +37,7 @@ public class RSACipherer implements Cipherer{
     }
 
     private byte[] tryDoFinal(byte[] data) {
-        byte[] encodedBytes;
-        RandomBytesGenerator randomBytesGenerator = new RandomBytesGenerator(data.length);
-        encodedBytes = randomBytesGenerator.generate();
+        byte[] encodedBytes = new byte[0];
         try {
             encodedBytes = cipher.doFinal(data);
         } catch (IllegalStateException | IllegalBlockSizeException | BadPaddingException e){
