@@ -42,7 +42,7 @@ public class DecodeManager implements CipherManager {
             job = new MockJob(sourceFilePath, destinationFilePath, headerBytesSize);
         } else{
             AESCipherer cipherer = AESCiphererFactory.produce(fileHeader.getMode(), sessionKey, fileHeader.getInitialVector());
-            job = new DecodeJob(cipherer, sourceFilePath, destinationFilePath, headerBytesSize);
+            job = new DecodeJob(cipherer, sourceFilePath, destinationFilePath, fileHeader.getBlockLength(), headerBytesSize);
         }
 
         jobExecutor = new CipherJobExecutor(job);

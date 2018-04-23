@@ -19,6 +19,7 @@ public class EncodedFileHeader {
     private byte[] initialVector;
     private Map<String, byte[]> usersKeys;
     private String extension;
+    private int blockLength;
 
     public EncodedFileHeader(EncodingData encodingData){
         this.mode = encodingData.getEncodingMode();
@@ -36,6 +37,7 @@ public class EncodedFileHeader {
 
         this.usersKeys = usersWithBase64SessionKeys;
         this.extension = getFileExtension(encodingData.getSelectedFile());
+        this.blockLength = encodingData.getBlockLength();
     }
 
     private String getFileExtension(String fileName) {
@@ -67,6 +69,7 @@ public class EncodedFileHeader {
             if(!usersKeys.containsKey(entry.getKey())) return false;
             if (!Arrays.equals(this.usersKeys.get(entry.getKey()), other.usersKeys.get(entry.getKey()))) return false;
         }
+        if (this.blockLength != other.blockLength) return false;
         return true;
     }
 

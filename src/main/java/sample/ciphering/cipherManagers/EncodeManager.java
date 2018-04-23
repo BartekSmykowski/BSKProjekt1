@@ -32,7 +32,7 @@ public class EncodeManager implements CipherManager {
         AESCipherer cipherer = createCipherer(encodingData);
         sourceFilePath = encodingData.getSelectedFile();
         destinationFilePath = encodingData.getDestinationFilePath();
-        return new EncodeJob(cipherer, sourceFilePath, destinationFilePath);
+        return new EncodeJob(cipherer, sourceFilePath, destinationFilePath, encodingData.getBlockLength());
     }
 
     private AESCipherer createCipherer(EncodingData encodingData) {

@@ -16,6 +16,7 @@ public class EncodingData {
     private byte[] sessionKey;
     private byte[] initialVector;
     private String saveFileName;
+    private int blockLength;
 
     public EncodingData(){
 
@@ -29,7 +30,7 @@ public class EncodingData {
         return selectedFile != null && saveDirectory != null
                 && encodingMode != null && sessionKey != null
                 && saveFileName != null && initialVector != null
-                && allowedUsers != null;
+                && allowedUsers != null && blockLength != 0;
     }
 
 }

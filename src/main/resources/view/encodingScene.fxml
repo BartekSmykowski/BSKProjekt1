@@ -69,5 +69,7 @@
       </VBox>
           <Button layoutX="473.0" layoutY="313.0" mnemonicParsing="false" onMouseClicked="#encode" text="Szyfruj" />
       <Label fx:id="errorLabel" layoutX="454.0" layoutY="281.0" prefHeight="17.0" prefWidth="90.0" />
+      <Label fx:id="chooseBlockLengthLabel" layoutX="259.0" layoutY="25.0" text="Wybierz dlugość bloku:" />
+      <ChoiceBox fx:id="blockLengthChoiceBox" layoutX="259.0" layoutY="42.0" prefWidth="150.0" />
     </children>
 </AnchorPane>

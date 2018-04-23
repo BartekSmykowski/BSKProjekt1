@@ -2,7 +2,6 @@ package sample.ciphering.jobs;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import sample.Settings;
 import sample.ciphering.cipherers.AES.AESCipherer;
 
 import java.io.FileInputStream;
@@ -16,24 +15,26 @@ public class DecodeJob implements CiphererJob {
     protected AESCipherer cipherer;
     private String sourceFile;
     private String destinationPath;
+    private int outBlockLength;
 
     private long bytesToSkip;
 
-    public DecodeJob(AESCipherer cipherer, String sourceFile, String destinationFile, long headerBytesToSkip) {
+    public DecodeJob(AESCipherer cipherer, String sourceFile, String destinationFile, int blockLength, long headerBytesToSkip) {
         this.cipherer = cipherer;
         this.sourceFile = sourceFile;
         this.destinationPath = destinationFile;
+        this.outBlockLength = (blockLength/16 + 1)*16;
         this.bytesToSkip = headerBytesToSkip;
     }
 
     @Override
     public Void call() throws Exception {
         long fileSize = Files.size(Paths.get(sourceFile));
-        long numberOfIterations = fileSize/Settings.OUT_PACKET_SIZE;
+        long numberOfIterations = fileSize/outBlockLength;
         try(FileInputStream inputStream = new FileInputStream(sourceFile);
             FileOutputStream outputStream = new FileOutputStream(destinationPath)) {
             inputStream.skip(bytesToSkip);
-            byte[] dataBlock = new byte[Settings.OUT_PACKET_SIZE];
+            byte[] dataBlock = new byte[outBlockLength];
             int i = 1;
             while (inputStream.read(dataBlock) != -1) {
                 byte[] decodedBlock;

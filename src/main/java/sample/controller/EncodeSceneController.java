@@ -29,6 +29,8 @@ public class EncodeSceneController {
     public ListView<CheckBox> encodingUsersListView;
     public Label saveDirectoryLabel;
     public Label errorLabel;
+    public Label chooseBlockLengthLabel;
+    public ChoiceBox<Integer> blockLengthChoiceBox;
 
 
     private EncodingData encodingData;
@@ -37,18 +39,20 @@ public class EncodeSceneController {
     private Map<String, User> usersMap = new HashMap<>();
 
     public void initialize(){
-        UsersLoader usersLoader = new UsersLoader();
-        Collection<User> users = usersLoader.loadUsers();
-        users.forEach(user -> {
-            CheckBox checkBox = new CheckBox(user.getLogin());
-            checkBox.setSelected(true);
-            usersCheckBoxList.add(checkBox);
-            usersMap.put(user.getLogin(), user);
-        });
-
-        encodingUsersListView.setItems(usersCheckBoxList);
-
         encodingData = new EncodingData();
+        encodingData.setBlockLength(Settings.DATA_PACKET_SIZE);
+        initUsersMapAndCheckBoxList();
+        initBlockLengthChoice();
+        initEncodingModeChoiceBox();
+
+        //test
+//        encodingData.setSaveDirectory(Settings.TEST_ENCODED_FILE_DIRECTORY);
+//        encodingData.setSelectedFile(Settings.TEST_ORIGINAL_FILE);
+//        newFileNameTextField.setText("encoded");
+
+    }
+
+    private void initEncodingModeChoiceBox() {
         encodingModeChoiceBox.getItems().setAll(EncodingModes.values());
         encodingModeChoiceBox
                 .getSelectionModel()
@@ -57,14 +61,51 @@ public class EncodeSceneController {
                     EncodingModes encodingMode = encodingModeChoiceBox.getItems().get((Integer) newVal);
                     encodingModeLabel.setText(encodingMode.toString());
                     encodingData.setEncodingMode(encodingMode);
+                    if(encodingMode.equals(EncodingModes.CFB) || encodingMode.equals(EncodingModes.OFB)){
+                        setBlockLengthChoiceVisible(true);
+                        blockLengthChoiceBox.getSelectionModel().selectFirst();
+                        encodingData.setBlockLength(blockLengthChoiceBox.getSelectionModel().getSelectedItem());
+                    } else {
+                        setBlockLengthChoiceVisible(false);
+                        encodingData.setBlockLength(Settings.DATA_PACKET_SIZE);
+                    }
                 });
         encodingModeChoiceBox.getSelectionModel().selectFirst();
+    }
 
-        //test
-        encodingData.setSaveDirectory(Settings.TEST_ENCODED_FILE_DIRECTORY);
-        encodingData.setSelectedFile(Settings.TEST_ORIGINAL_FILE);
-        newFileNameTextField.setText("encoded");
+    private void initUsersMapAndCheckBoxList() {
+        UsersLoader usersLoader = new UsersLoader();
+        Collection<User> users = usersLoader.loadUsers();
+        users.forEach(user -> {
+            CheckBox checkBox = new CheckBox(user.getLogin());
+            checkBox.setSelected(true);
+            usersCheckBoxList.add(checkBox);
+            usersMap.put(user.getLogin(), user);
+        });
+        encodingUsersListView.setItems(usersCheckBoxList);
+    }
 
+    private void initBlockLengthChoice() {
+        setBlockLengthChoiceVisible(false);
+        List<Integer> blockLengths = new ArrayList<>();
+        blockLengths.add(16);
+        blockLengths.add(32);
+        blockLengths.add(64);
+        blockLengths.add(128);
+        blockLengthChoiceBox.getItems().setAll(blockLengths);
+        blockLengthChoiceBox
+                .getSelectionModel()
+                .selectedIndexProperty()
+                .addListener((observableValue, oldVal, newVal) -> {
+                    int blockLength = blockLengthChoiceBox.getItems().get((Integer) newVal);
+                    encodingData.setBlockLength(blockLength);
+                });
+        blockLengthChoiceBox.getSelectionModel().selectFirst();
+    }
+
+    private void setBlockLengthChoiceVisible(boolean b) {
+        chooseBlockLengthLabel.setVisible(b);
+        blockLengthChoiceBox.setVisible(b);
     }
 
     public void mainMenu() {

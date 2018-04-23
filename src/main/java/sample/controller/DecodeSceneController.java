@@ -6,7 +6,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import sample.Settings;
 import sample.ciphering.cipherManagers.DecodeManager;
 import sample.model.ManagersData.DecodingData;
 import sample.model.User;
@@ -40,11 +39,11 @@ public class DecodeSceneController {
         initChoiceBox();
 
         //test
-        usersChoiceBox.getSelectionModel().selectFirst();
-        decodingData.setSaveDirectoryPath(Settings.TEST_DECODED_FILE_SAVE_DIRECTORY);
-        decodingData.setSelectedFilePath(Settings.TEST_ENCODED_FILE_DIRECTORY + "/" + Settings.TEST_ENCODED_FILE_NAME);
-        newFileName.setText(Settings.TEST_DECODED_FILE_NAME);
-        passwordTextField.setText("qwe");
+//        usersChoiceBox.getSelectionModel().selectFirst();
+//        decodingData.setSaveDirectoryPath(Settings.TEST_DECODED_FILE_SAVE_DIRECTORY);
+//        decodingData.setSelectedFilePath(Settings.TEST_ENCODED_FILE_DIRECTORY + "/" + Settings.TEST_ENCODED_FILE_NAME);
+//        newFileName.setText(Settings.TEST_DECODED_FILE_NAME);
+//        passwordTextField.setText("qwe");
     }
 
     public void mainMenu() {
